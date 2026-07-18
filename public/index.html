@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>El Garaje de Rochi — Vitaminas y Suplementos</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Barra superior -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__logo" id="brandLogo">GR</div>
+        <div class="brand__name" id="brandName">El Garaje de Rochi</div>
+      </div>
+      <nav class="nav" id="nav"></nav>
+      <div class="actions">
+        <input id="buscar" class="search" type="search" placeholder="Buscar producto o marca…" />
+        <button class="account-btn" id="contactoBtn" aria-label="Servicio al cliente">📞 <span>Contacto</span></button>
+        <button class="account-btn" id="accountBtn" aria-label="Mi cuenta">👤 <span id="accountLabel">Ingresar</span></button>
+        <button class="cart-btn" id="abrirCarrito" aria-label="Carrito">
+          🛒 <span class="cart-count" id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="freeship-banner" id="freeshipBanner"></div>
+
+    <!-- Destacados -->
+    <section class="hero">
+      <h1 class="hero__title">Vitaminas y suplementos originales</h1>
+      <p class="hero__subtitle">Envíos a todo el país • Productos con existencias reales</p>
+    </section>
+
+    <!-- Filtros de categoría -->
+    <div class="chips" id="chips"></div>
+
+    <!-- Grilla de productos -->
+    <main class="grid" id="grid"></main>
+
+    <!-- Panel del carrito -->
+    <aside class="cart" id="cart" aria-hidden="true">
+      <div class="cart__head">
+        <h2>Tu carrito</h2>
+        <button id="cerrarCarrito" class="icon-btn" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="cart__items" id="cartItems"></div>
+      <div class="cart__footer" id="cartFooter"></div>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Modal de checkout -->
+    <div class="modal" id="checkoutModal" aria-hidden="true">
+      <div class="modal__box">
+        <div class="modal__head">
+          <h2>Finalizar compra</h2>
+          <button id="cerrarCheckout" class="icon-btn" aria-label="Cerrar">✕</button>
+        </div>
+        <form id="checkoutForm" class="form">
+          <label>Nombre completo<input name="nombre" required /></label>
+          <label>Teléfono / WhatsApp<input name="telefono" required /></label>
+          <label>Dirección<input name="direccion" required /></label>
+          <label>Ciudad<input name="ciudad" required /></label>
+          <label>Región de envío
+            <select name="region" id="regionSelect" required></select>
+          </label>
+          <div class="resumen" id="resumenCheckout"></div>
+          <div id="pagoOnline" class="pago-online" hidden>
+            <button type="button" class="btn btn--pay btn--block" id="pagarWompi">
+              💳 Pagar en línea (PSE / Tarjeta)
+            </button>
+            <p class="pago-online__nota">Pago seguro procesado por Wompi 🔒</p>
+            <div class="pago-sep"><span>o</span></div>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block">Confirmar pedido por WhatsApp</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de detalle de producto (foto grande con marca de agua) -->
+    <div class="modal" id="productModal" aria-hidden="true">
+      <div class="modal__box modal__box--wide">
+        <div class="modal__head">
+          <h2 id="pmNombre">Producto</h2>
+          <button id="cerrarProducto" class="icon-btn" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="pm">
+          <div class="pm__left">
+            <div class="pm__media" id="pmMedia">
+              <img id="pmImg" src="" alt="" />
+              <span class="pm__watermark">El Garaje de Rochi</span>
+            </div>
+            <div class="pm__thumbs" id="pmThumbs"></div>
+          </div>
+          <div class="pm__info">
+            <div class="pm__brand" id="pmMarca"></div>
+            <div class="pm__price" id="pmPrecio"></div>
+            <div class="pm__sections" id="pmSections"></div>
+            <button class="btn btn--primary btn--block" id="pmAdd">Agregar al carrito</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de cuenta de cliente (registro / inicio de sesión) -->
+    <div class="modal" id="authModal" aria-hidden="true">
+      <div class="modal__box modal__box--sm">
+        <div class="modal__head">
+          <h2 id="authTitle">Ingresar</h2>
+          <button id="cerrarAuth" class="icon-btn" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Ingresar</button>
+          <button class="auth-tab" data-tab="registro">Crear cuenta</button>
+        </div>
+        <form id="authForm" class="form">
+          <div class="auth-msg" id="authMsg"></div>
+          <label id="fldNombre">Nombre<input name="nombre" autocomplete="name" /></label>
+          <label>Correo electrónico<input name="email" type="email" autocomplete="email" required /></label>
+          <label>Contraseña<input name="password" type="password" autocomplete="current-password" required /></label>
+          <label class="check" id="fldPublicidad">
+            <input type="checkbox" name="aceptaPublicidad" />
+            <span>Quiero recibir promociones y novedades por correo</span>
+          </label>
+          <button type="submit" class="btn btn--primary btn--block" id="authSubmit">Ingresar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="okModal" aria-hidden="true">
+      <div class="modal__box modal__box--sm">
+        <div id="okContent"></div>
+        <button id="cerrarOk" class="btn btn--primary btn--block">Seguir comprando</button>
+      </div>
+    </div>
+
+    <!-- Modal de servicio al cliente / contacto -->
+    <div class="modal" id="contactModal" aria-hidden="true">
+      <div class="modal__box">
+        <div class="modal__head">
+          <h2>Servicio al cliente</h2>
+          <button id="cerrarContacto" class="icon-btn" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="contacto" id="contactoBody"></div>
+      </div>
+    </div>
+
+    <!-- Botón flotante de WhatsApp -->
+    <a class="whatsapp-fab" id="whatsappFab" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+    <footer class="footer">
+      <div class="footer__contacto" id="footerContacto"></div>
+      <p>El Garaje de Rochi — Vitaminas y suplementos. Envíos a nivel nacional 🇨🇴</p>
+      <p class="footer__muted">Los suplementos no reemplazan una dieta equilibrada ni tratamiento médico. Consulta a tu profesional de salud.</p>
+    </footer>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "name": "nutrivida",
+  "version": "1.0.0",
+  "description": "Tienda de vitaminas y suplementos con carrito, inventario, envíos nacionales y bots autónomos de WhatsApp e Instagram",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "bot:whatsapp": "node bots/whatsapp.js",
+    "bot:instagram": "node bots/instagram.js"
+  },
+  "keywords": [
+    "ecommerce",
+    "suplementos",
+    "vitaminas",
+    "whatsapp-bot",
+    "instagram-bot"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "qrcode": "^1.5.4"
+  },
+  "optionalDependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.34.7"
+  }
+}

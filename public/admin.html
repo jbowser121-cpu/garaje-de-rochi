@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel de moderador — El Garaje de Rochi</title>
+    <style>
+      :root {
+        --teal: #4fb8ab; --teal-dark: #3a9a8e; --teal-deep: #2f7d73;
+        --ink: #1f2d2b; --muted: #6b7c79; --line: #e2ebe9; --bg: #f4f8f7;
+        --bad: #d6503c; --good: #1c9c6b;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+      a { color: var(--teal-deep); }
+      .topbar { background: var(--teal); color: #fff; padding: 14px 22px; display: flex; align-items: center; gap: 12px; }
+      .topbar h1 { font-size: 18px; margin: 0; flex: 1; }
+      .btn { border: none; border-radius: 9px; padding: 9px 14px; font-size: 14px; font-weight: 600; cursor: pointer; }
+      .btn--primary { background: var(--teal); color: #fff; }
+      .btn--primary:hover { background: var(--teal-dark); }
+      .btn--ghost { background: #fff; color: var(--teal-deep); border: 1px solid var(--line); }
+      .btn--danger { background: #fff; color: var(--bad); border: 1px solid #f0cfc9; }
+      .btn--sm { padding: 6px 10px; font-size: 13px; }
+      .wrap { max-width: 1100px; margin: 0 auto; padding: 22px; }
+
+      /* Login */
+      .login { max-width: 360px; margin: 80px auto; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+      .login h2 { margin: 0 0 4px; color: var(--teal-deep); }
+      .login p { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+      .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
+      .field input, .field select { padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; font-family: inherit; }
+      .field input:focus, .field select:focus { outline: none; border-color: var(--teal); }
+      .msg { font-size: 13px; padding: 9px 12px; border-radius: 8px; margin-bottom: 12px; display: none; }
+      .msg.err { background: #fdece9; color: var(--bad); display: block; }
+      .msg.ok { background: #e7f6ef; color: var(--good); display: block; }
+
+      .card { background: #fff; border-radius: 14px; box-shadow: 0 4px 18px rgba(0,0,0,.05); padding: 20px; margin-bottom: 22px; }
+      .card h3 { margin: 0 0 14px; font-size: 16px; }
+      .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+      .logo-preview { width: 56px; height: 56px; border-radius: 50%; background: var(--teal-deep); color: #fff; display: grid; place-items: center; font-weight: 700; overflow: hidden; }
+      .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th { text-align: left; padding: 10px 8px; border-bottom: 2px solid var(--line); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+      td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      td input, td select { width: 100%; padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; font-size: 13px; font-family: inherit; }
+      td input:focus, td select:focus { outline: none; border-color: var(--teal); }
+      .thumb { width: 46px; height: 46px; border-radius: 8px; object-fit: contain; background: #f0f4f3; border: 1px solid var(--line); }
+      .row-actions { display: flex; gap: 6px; white-space: nowrap; }
+      .col-precio input, .col-stock input { text-align: right; }
+      .table-scroll { overflow-x: auto; }
+      .find-link { font-size: 11px; display: block; margin-top: 3px; }
+      .dirty { background: #fffbe6; }
+      .hint { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <!-- Login -->
+    <div id="loginScreen">
+      <div class="login">
+        <h2>Panel de moderador</h2>
+        <p>El Garaje de Rochi</p>
+        <div class="msg" id="loginMsg"></div>
+        <div class="field"><label>Usuario</label><input id="usuario" autocomplete="username" /></div>
+        <div class="field"><label>Contraseña</label><input id="clave" type="password" autocomplete="current-password" /></div>
+        <button class="btn btn--primary" style="width:100%" id="loginBtn">Ingresar</button>
+        <p class="hint">Por defecto: usuario <b>admin</b> / clave <b>rochi123</b> (cámbialas en el archivo .env).</p>
+      </div>
+    </div>
+
+    <!-- Panel -->
+    <div id="panel" class="hidden">
+      <div class="topbar">
+        <h1>🛠️ Panel de moderador — El Garaje de Rochi</h1>
+        <a class="btn btn--ghost btn--sm" href="/" target="_blank">Ver tienda ↗</a>
+        <button class="btn btn--ghost btn--sm" id="logoutBtn">Salir</button>
+      </div>
+      <div class="wrap">
+        <div class="msg" id="globalMsg"></div>
+
+        <!-- Ajustes de la tienda -->
+        <div class="card">
+          <h3>Datos de la tienda</h3>
+          <div class="settings-grid">
+            <div class="field"><label>Nombre</label><input id="s-nombre" /></div>
+            <div class="field"><label>Iniciales del logo (si no hay imagen)</label><input id="s-iniciales" maxlength="3" /></div>
+            <div class="field"><label>WhatsApp (57 + número)</label><input id="s-whatsapp" placeholder="573001112233" /></div>
+            <div class="field"><label>Instagram</label><input id="s-instagram" /></div>
+            <div class="field"><label>Envío gratis desde (COP)</label><input id="s-umbral" type="number" /></div>
+            <div class="field">
+              <label>Logo de la tienda</label>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="logo-preview" id="logoPreview">GR</div>
+                <div style="flex:1">
+                  <input id="s-logo" placeholder="URL del logo o sube una imagen" />
+                  <input type="file" id="logoFile" accept="image/*" style="margin-top:6px;font-size:12px" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:14px"><button class="btn btn--primary" id="saveTienda">Guardar datos de la tienda</button></div>
+        </div>
+
+        <!-- Productos -->
+        <div class="card">
+          <h3 style="display:flex;align-items:center;gap:10px">Productos <span id="count" style="font-size:13px;color:var(--muted);font-weight:400"></span>
+            <button class="btn btn--ghost btn--sm" id="addBtn" style="margin-left:auto">+ Agregar producto</button>
+          </h3>
+          <p class="hint">Edita precio, stock e imagen y pulsa <b>Guardar</b> en la fila. Para la imagen: abre el producto en Walmart/Costco (enlace "buscar"), clic derecho en la foto → “Copiar dirección de la imagen” → pégala en el campo Imagen.</p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Foto</th><th>Imagen (URL)</th><th>Nombre</th><th>Marca</th>
+                  <th>Categoría</th><th class="col-precio">Precio</th><th class="col-stock">Stock</th><th>Dest.</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Clientes registrados -->
+        <div class="card">
+          <h3 style="display:flex;align-items:center;gap:10px">Clientes registrados <span id="countClientes" style="font-size:13px;color:var(--muted);font-weight:400"></span>
+            <button class="btn btn--primary btn--sm" id="descargarCorreos" style="margin-left:auto">⬇ Descargar correos (publicidad)</button>
+          </h3>
+          <p class="hint">Solo puedes enviar publicidad a quienes marcaron la casilla de autorización. Los correos también se guardan en la carpeta <b>server/data/registro/</b>.</p>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Correo</th><th>Nombre</th><th>Publicidad</th><th>Registro</th></tr></thead>
+              <tbody id="tbodyClientes"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de detalle de producto -->
+    <div id="detalleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;place-items:center;padding:20px">
+      <div style="background:#fff;border-radius:14px;width:560px;max-width:96vw;max-height:92vh;overflow-y:auto">
+        <div class="topbar" style="border-radius:14px 14px 0 0"><h1 id="detalleTitulo" style="font-size:16px">Detalle del producto</h1><button class="btn btn--ghost btn--sm" id="cerrarDetalle">✕</button></div>
+        <div style="padding:20px">
+          <p class="hint" style="margin-top:0">Esto es lo que verá el cliente al hacer clic en la foto del producto.</p>
+          <div class="field"><label>¿Para qué sirve?</label><textarea id="d-paraQue" rows="3" style="padding:10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;resize:vertical"></textarea></div>
+          <div class="field"><label>Propiedades</label><textarea id="d-propiedades" rows="3" style="padding:10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;resize:vertical"></textarea></div>
+          <div class="field"><label>Contenido / ingredientes</label><textarea id="d-contenido" rows="3" style="padding:10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;resize:vertical"></textarea></div>
+          <div class="field"><label>Modo de uso (cómo tomarlo)</label><textarea id="d-modoUso" rows="3" style="padding:10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;resize:vertical"></textarea></div>
+          <button class="btn btn--primary" id="guardarDetalle" style="width:100%">Guardar detalle</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const money = (n) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n);
+      const $ = (s) => document.querySelector(s);
+      let token = localStorage.getItem("gr_admin_token") || "";
+      let cats = [];
+      let productosCache = [];
+
+      function authHeaders() { return { "Content-Type": "application/json", Authorization: "Bearer " + token }; }
+
+      function showMsg(el, text, ok = false) {
+        el.textContent = text; el.className = "msg " + (ok ? "ok" : "err");
+        setTimeout(() => { if (el.className.includes("ok")) el.className = "msg"; }, 3500);
+      }
+
+      // ---- Login ----
+      async function login() {
+        const usuario = $("#usuario").value.trim();
+        const clave = $("#clave").value;
+        const res = await fetch("/api/admin/login", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario, clave }),
+        });
+        const data = await res.json();
+        if (!res.ok) { showMsg($("#loginMsg"), data.error || "Error al ingresar"); return; }
+        token = data.token; localStorage.setItem("gr_admin_token", token);
+        enterPanel();
+      }
+      $("#loginBtn").onclick = login;
+      $("#clave").addEventListener("keydown", (e) => { if (e.key === "Enter") login(); });
+
+      $("#logoutBtn").onclick = async () => {
+        try { await fetch("/api/admin/logout", { method: "POST", headers: authHeaders() }); } catch {}
+        localStorage.removeItem("gr_admin_token"); token = "";
+        $("#panel").classList.add("hidden"); $("#loginScreen").classList.remove("hidden");
+      };
+
+      async function enterPanel() {
+        const res = await fetch("/api/admin/productos", { headers: authHeaders() });
+        if (res.status === 401) { localStorage.removeItem("gr_admin_token"); token = ""; return; }
+        const data = await res.json();
+        cats = data.categorias;
+        $("#loginScreen").classList.add("hidden");
+        $("#panel").classList.remove("hidden");
+        fillTienda(data.tienda, data.envios);
+        renderProductos(data.productos);
+        renderClientes();
+      }
+
+      async function renderClientes() {
+        const res = await fetch("/api/admin/clientes", { headers: authHeaders() });
+        if (!res.ok) return;
+        const clientes = await res.json();
+        $("#countClientes").textContent = `(${clientes.length})`;
+        const conPublicidad = clientes.filter((c) => c.aceptaPublicidad).length;
+        $("#tbodyClientes").innerHTML = clientes.length
+          ? clientes.map((c) => `
+            <tr>
+              <td>${c.email}</td>
+              <td>${c.nombre || "-"}</td>
+              <td>${c.aceptaPublicidad ? "✅ Sí" : "—"}</td>
+              <td>${new Date(c.fecha).toLocaleDateString("es-CO")}</td>
+            </tr>`).join("")
+          : `<tr><td colspan="4" style="color:var(--muted)">Aún no hay clientes registrados.</td></tr>`;
+        $("#descargarCorreos").textContent = `⬇ Descargar correos (${conPublicidad} autorizados)`;
+      }
+
+      $("#descargarCorreos").onclick = async () => {
+        const res = await fetch("/api/admin/clientes/publicidad.csv", { headers: authHeaders() });
+        if (!res.ok) { showMsg($("#globalMsg"), "No se pudo descargar."); return; }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = "correos-publicidad.csv"; a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      // ---- Detalle de producto ----
+      let detalleSku = null;
+      function abrirDetalle(sku) {
+        const p = productosCache.find((x) => x.sku === sku);
+        if (!p) return;
+        detalleSku = sku;
+        $("#detalleTitulo").textContent = p.nombre;
+        $("#d-paraQue").value = p.paraQue || "";
+        $("#d-propiedades").value = p.propiedades || "";
+        $("#d-contenido").value = p.contenido || "";
+        $("#d-modoUso").value = p.modoUso || "";
+        $("#detalleModal").style.display = "grid";
+      }
+      $("#cerrarDetalle").onclick = () => ($("#detalleModal").style.display = "none");
+      $("#guardarDetalle").onclick = async () => {
+        const body = {
+          paraQue: $("#d-paraQue").value,
+          propiedades: $("#d-propiedades").value,
+          contenido: $("#d-contenido").value,
+          modoUso: $("#d-modoUso").value,
+        };
+        const res = await fetch(`/api/admin/productos/${encodeURIComponent(detalleSku)}`, {
+          method: "PATCH", headers: authHeaders(), body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          const p = productosCache.find((x) => x.sku === detalleSku);
+          if (p) Object.assign(p, body);
+          $("#detalleModal").style.display = "none";
+          showMsg($("#globalMsg"), "Detalle guardado ✓", true);
+        } else showMsg($("#globalMsg"), data.error || "Error");
+      };
+
+      // ---- Tienda ----
+      function fillTienda(t, envios) {
+        $("#s-nombre").value = t.nombre || "";
+        $("#s-iniciales").value = t.iniciales || "";
+        $("#s-whatsapp").value = t.whatsapp || "";
+        $("#s-instagram").value = t.instagram || "";
+        $("#s-umbral").value = envios.umbralEnvioGratis || 0;
+        $("#s-logo").value = t.logoUrl || "";
+        updateLogoPreview();
+      }
+      function updateLogoPreview() {
+        const url = $("#s-logo").value.trim();
+        const el = $("#logoPreview");
+        if (url) el.innerHTML = `<img src="${url}" alt="logo" onerror="this.remove()">`;
+        else el.textContent = ($("#s-iniciales").value || "GR").toUpperCase();
+      }
+      $("#s-logo").addEventListener("input", updateLogoPreview);
+      $("#s-iniciales").addEventListener("input", updateLogoPreview);
+      $("#logoFile").addEventListener("change", (e) => {
+        const file = e.target.files[0]; if (!file) return;
+        if (file.size > 1.5 * 1024 * 1024) { showMsg($("#globalMsg"), "La imagen del logo debe pesar menos de 1.5 MB."); return; }
+        const reader = new FileReader();
+        reader.onload = () => { $("#s-logo").value = reader.result; updateLogoPreview(); };
+        reader.readAsDataURL(file);
+      });
+      $("#saveTienda").onclick = async () => {
+        const body = {
+          nombre: $("#s-nombre").value.trim(),
+          iniciales: $("#s-iniciales").value.trim(),
+          whatsapp: $("#s-whatsapp").value.trim(),
+          instagram: $("#s-instagram").value.trim(),
+          logoUrl: $("#s-logo").value.trim(),
+          umbralEnvioGratis: Number($("#s-umbral").value) || 0,
+        };
+        const res = await fetch("/api/admin/tienda", { method: "PATCH", headers: authHeaders(), body: JSON.stringify(body) });
+        const data = await res.json();
+        showMsg($("#globalMsg"), res.ok ? "Datos de la tienda guardados ✓" : (data.error || "Error"), res.ok);
+      };
+
+      // ---- Productos ----
+      function catOptions(sel) {
+        return cats.map((c) => `<option value="${c.id}" ${c.id === sel ? "selected" : ""}>${c.nombre}</option>`).join("");
+      }
+      function walmartSearch(nombre) {
+        return "https://www.walmart.com/search?q=" + encodeURIComponent(nombre);
+      }
+
+      function renderProductos(productos) {
+        productosCache = productos;
+        $("#count").textContent = `(${productos.length})`;
+        $("#tbody").innerHTML = productos.map(rowHtml).join("");
+        bindRows();
+      }
+
+      function rowHtml(p) {
+        return `
+        <tr data-sku="${p.sku}">
+          <td><img class="thumb" src="${p.imagen || ""}" alt="" onerror="this.style.visibility='hidden'"></td>
+          <td style="min-width:180px">
+            <input data-f="imagen" value="${(p.imagen || "").replace(/"/g, "&quot;")}" placeholder="URL de la imagen" />
+            <a class="find-link" href="${walmartSearch(p.nombre)}" target="_blank" rel="noopener">🔎 buscar en Walmart</a>
+          </td>
+          <td style="min-width:160px"><input data-f="nombre" value="${p.nombre.replace(/"/g, "&quot;")}" /></td>
+          <td style="min-width:90px"><input data-f="marca" value="${(p.marca || "").replace(/"/g, "&quot;")}" /></td>
+          <td style="min-width:130px"><select data-f="categoria">${catOptions(p.categoria)}</select></td>
+          <td class="col-precio" style="min-width:100px"><input data-f="precio" type="number" value="${p.precio}" /></td>
+          <td class="col-stock" style="min-width:70px"><input data-f="stock" type="number" value="${p.stock}" /></td>
+          <td style="text-align:center"><input data-f="destacado" type="checkbox" ${p.destacado ? "checked" : ""}></td>
+          <td>
+            <div class="row-actions">
+              <button class="btn btn--primary btn--sm" data-save>Guardar</button>
+              <button class="btn btn--ghost btn--sm" data-detalle>Detalle ✎</button>
+              <button class="btn btn--danger btn--sm" data-del>✕</button>
+            </div>
+          </td>
+        </tr>`;
+      }
+
+      function readRow(tr) {
+        const get = (f) => tr.querySelector(`[data-f="${f}"]`);
+        return {
+          imagen: get("imagen").value.trim(),
+          nombre: get("nombre").value.trim(),
+          marca: get("marca").value.trim(),
+          categoria: get("categoria").value,
+          precio: Number(get("precio").value) || 0,
+          stock: Number(get("stock").value) || 0,
+          destacado: get("destacado").checked,
+        };
+      }
+
+      function bindRows() {
+        document.querySelectorAll("#tbody tr").forEach((tr) => {
+          tr.querySelectorAll("input,select").forEach((inp) => {
+            inp.addEventListener("input", () => tr.classList.add("dirty"));
+            if (inp.dataset.f === "imagen") inp.addEventListener("input", () => {
+              tr.querySelector(".thumb").src = inp.value.trim();
+              tr.querySelector(".thumb").style.visibility = "visible";
+            });
+          });
+          tr.querySelector("[data-save]").onclick = async () => {
+            const sku = tr.dataset.sku;
+            const res = await fetch(`/api/admin/productos/${encodeURIComponent(sku)}`, {
+              method: "PATCH", headers: authHeaders(), body: JSON.stringify(readRow(tr)),
+            });
+            const data = await res.json();
+            if (res.ok) { tr.classList.remove("dirty"); showMsg($("#globalMsg"), `“${data.nombre}” guardado ✓`, true); }
+            else showMsg($("#globalMsg"), data.error || "Error al guardar");
+          };
+          tr.querySelector("[data-detalle]").onclick = () => abrirDetalle(tr.dataset.sku);
+          tr.querySelector("[data-del]").onclick = async () => {
+            if (!confirm("¿Eliminar este producto?")) return;
+            const sku = tr.dataset.sku;
+            const res = await fetch(`/api/admin/productos/${encodeURIComponent(sku)}`, { method: "DELETE", headers: authHeaders() });
+            if (res.ok) { tr.remove(); showMsg($("#globalMsg"), "Producto eliminado ✓", true); }
+            else showMsg($("#globalMsg"), "Error al eliminar");
+          };
+        });
+      }
+
+      // ---- Agregar producto ----
+      $("#addBtn").onclick = async () => {
+        const nombre = prompt("Nombre del nuevo producto:");
+        if (!nombre) return;
+        const sku = prompt("Código SKU único (ej: SUP-NUEVO-01):", "SKU-" + Date.now());
+        if (!sku) return;
+        const res = await fetch("/api/admin/productos", {
+          method: "POST", headers: authHeaders(),
+          body: JSON.stringify({ sku, nombre, categoria: "suplementos", precio: 0, stock: 0 }),
+        });
+        const data = await res.json();
+        if (!res.ok) { showMsg($("#globalMsg"), data.error || "Error"); return; }
+        const r = await fetch("/api/admin/productos", { headers: authHeaders() });
+        renderProductos((await r.json()).productos);
+        showMsg($("#globalMsg"), "Producto creado. Completa sus datos y guarda ✓", true);
+      };
+
+      // ---- Auto-entrar si ya hay sesión ----
+      if (token) enterPanel();
+    </script>
+  </body>
+</html>

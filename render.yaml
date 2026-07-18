@@ -1,0 +1,23 @@
+# Despliegue en Render (https://render.com) — plan gratuito, en línea 24/7.
+# 1. Sube este proyecto a un repositorio de GitHub.
+# 2. En Render: New > Blueprint, conecta el repo y confirma.
+# 3. En Environment, agrega las variables ADMIN_USER, ADMIN_PASS y (opcional) WOMPI_*.
+# 4. Cuando termine, copia la URL (https://el-garaje-de-rochi.onrender.com) y ponla
+#    en PUBLIC_URL para que los mensajes lleven el link definitivo.
+services:
+  - type: web
+    name: el-garaje-de-rochi
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      # Evita descargar el navegador de puppeteer (la web no usa el bot) -> build rápido.
+      - key: PUPPETEER_SKIP_DOWNLOAD
+        value: "true"
+      - key: PUBLIC_URL
+        sync: false
+      - key: ADMIN_USER
+        sync: false
+      - key: ADMIN_PASS
+        sync: false
