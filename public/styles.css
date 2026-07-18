@@ -31,14 +31,22 @@ a { color: inherit; }
   background: var(--teal);
   color: var(--white);
 }
-.brand { display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 11px; }
 .brand__logo {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--white); color: var(--teal-deep);
-  display: grid; place-items: center; font-weight: 800; letter-spacing: .5px;
-  border: 2px solid var(--teal-deep);
+  width: 46px; height: 46px; border-radius: 12px;
+  background: #f6efe4; color: #7a6a53;
+  display: grid; place-items: center; overflow: hidden;
+  border: 1px solid rgba(255,255,255,.7); box-shadow: 0 2px 6px rgba(0,0,0,.12);
 }
-.brand__name { font-weight: 700; font-size: 20px; }
+.brand__logo img { width: 100%; height: 100%; object-fit: cover; }
+.brand__mono {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic; font-weight: 600; font-size: 30px; line-height: 1; letter-spacing: -1px;
+}
+.brand__name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 600; font-size: 23px; letter-spacing: 1.5px; text-transform: uppercase;
+}
 .nav { display: flex; gap: 20px; flex: 1; }
 .nav button {
   background: none; border: none; color: var(--white); font-size: 15px;
@@ -67,6 +75,57 @@ a { color: inherit; }
 .freeship-banner {
   background: var(--teal-deep); color: #eafff9; text-align: center;
   font-size: 14px; padding: 8px; letter-spacing: .2px;
+}
+
+/* Cinta de anuncios en movimiento */
+.ticker {
+  background: #2b3a37; color: #f6efe4; overflow: hidden; white-space: nowrap;
+  padding: 7px 0; font-size: 13px; letter-spacing: .3px;
+}
+.ticker__track {
+  display: inline-block; white-space: nowrap; padding-left: 100%;
+  animation: ticker 32s linear infinite;
+}
+.ticker:hover .ticker__track { animation-play-state: paused; }
+.ticker__track span { margin: 0 26px; }
+.ticker__track b { color: #e7c9a0; font-weight: 700; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Lo más pedido (showcase rotativo) */
+.showcase {
+  max-width: 1000px; margin: 20px auto 4px; padding: 0 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.showcase__label {
+  font-weight: 800; color: var(--teal-deep); font-size: 18px; letter-spacing: .3px;
+}
+.showcase__stage {
+  width: 100%; background: #fff; border-radius: 16px; box-shadow: var(--shadow);
+  display: grid; grid-template-columns: 260px 1fr; overflow: hidden; min-height: 240px;
+}
+.showcase__img {
+  position: relative; background: #fff; display: grid; place-items: center; border-right: 1px solid var(--line);
+}
+.showcase__img img { width: 100%; height: 240px; object-fit: contain; padding: 14px; }
+.showcase__wm {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  color: rgba(47,125,115,.16); font-weight: 800; font-size: 20px; transform: rotate(-20deg);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.showcase__info { padding: 26px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.showcase__brand { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 700; }
+.showcase__name { font-size: 22px; font-weight: 700; line-height: 1.25; }
+.showcase__price { font-size: 28px; font-weight: 800; color: var(--teal-deep); }
+.showcase__fade { animation: fadeIn .6s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.showcase__dots { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; }
+.showcase__dot { width: 8px; height: 8px; border-radius: 50%; background: #cdddd9; border: none; cursor: pointer; padding: 0; }
+.showcase__dot.active { background: var(--teal); width: 22px; border-radius: 5px; }
+
+@media (max-width: 640px) {
+  .showcase__stage { grid-template-columns: 1fr; }
+  .showcase__img img { height: 190px; }
+  .brand__name { display: none; }
 }
 
 /* Hero */

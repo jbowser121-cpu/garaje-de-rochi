@@ -27,22 +27,95 @@ async function init() {
   document.title = `${info.tienda.nombre} — Vitaminas y Suplementos`;
   $("#brandName").textContent = info.tienda.nombre;
   if (info.tienda.logoUrl) {
-    $("#brandLogo").innerHTML = `<img src="${info.tienda.logoUrl}" alt="${info.tienda.nombre}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    $("#brandLogo").style.background = "transparent";
-  } else if (info.tienda.iniciales) {
-    $("#brandLogo").textContent = info.tienda.iniciales;
+    $("#brandLogo").innerHTML = `<img src="${info.tienda.logoUrl}" alt="${info.tienda.nombre}">`;
+    $("#brandLogo").style.background = "#f6efe4";
   }
   $("#freeshipBanner").textContent = `🚚 Envío GRATIS en compras desde ${money(info.envios.umbralEnvioGratis)} · Envíos a todo el país`;
   $("#whatsappFab").href = `https://wa.me/${info.tienda.whatsapp}?text=${encodeURIComponent("Hola, quiero información de un producto")}`;
 
+  renderTicker();
   renderNav();
   renderChips();
   renderRegionSelect();
   renderCuenta();
   renderContacto();
   await cargarProductos();
+  renderShowcase();
   bindEvents();
   renderCart();
+}
+
+// ---------- Cinta de anuncios en movimiento ----------
+function renderTicker() {
+  const t = state.tienda;
+  const c = t.contacto || {};
+  const ig = (t.instagram || "").replace(/^@/, "");
+  const items = [
+    `📍 Estamos en <b>${c.direccion || "Granada, Meta"}</b>`,
+    `🛵 Domicilio <b>GRATIS</b> en Granada, Meta`,
+    `🚚 Envíos a <b>todo Colombia</b>`,
+    `📱 Pedidos por WhatsApp: <b>${c.telefono || "+57 314 450 3681"}</b>`,
+    `📸 Síguenos en Instagram: <b>${t.instagram || "@elgarajederochi"}</b>`,
+    `💳 Paga con tarjeta, PSE o contra entrega`,
+    `🌿 Vitaminas y suplementos <b>originales</b>`,
+  ];
+  const linea = items.map((i) => `<span>${i}</span>`).join("<span>•</span>");
+  // Se duplica el contenido para que el desplazamiento sea continuo (loop del -50%).
+  $("#tickerTrack").innerHTML = linea + `<span>•</span>` + linea;
+  // Instagram clickeable en el FAB no; aquí solo texto.
+  void ig;
+}
+
+// ---------- Lo más pedido (showcase rotativo) ----------
+let showcaseTimer = null;
+function renderShowcase() {
+  // Elige ~10 productos: primero los destacados, luego el resto, con foto.
+  const conFoto = state.productos.filter((p) => p.imagen);
+  const destacados = conFoto.filter((p) => p.destacado);
+  const resto = conFoto.filter((p) => !p.destacado);
+  const seleccion = [...destacados, ...resto].slice(0, 10);
+  if (seleccion.length === 0) return;
+
+  const stage = $("#showcaseStage");
+  const dots = $("#showcaseDots");
+  $("#showcase").hidden = false;
+  dots.innerHTML = seleccion
+    .map((_, i) => `<button class="showcase__dot ${i === 0 ? "active" : ""}" data-i="${i}" aria-label="Producto ${i + 1}"></button>`)
+    .join("");
+  const botones = [...dots.querySelectorAll(".showcase__dot")];
+
+  let idx = 0;
+  const pintar = (i) => {
+    const p = seleccion[i];
+    stage.innerHTML = `
+      <div class="showcase__img">
+        <img src="${p.imagen}" alt="${p.nombre}" class="showcase__fade" onerror="this.style.display='none'">
+        <span class="showcase__wm">El Garaje de Rochi</span>
+      </div>
+      <div class="showcase__info showcase__fade">
+        <div class="showcase__brand">${p.marca || ""}</div>
+        <div class="showcase__name">${p.nombre}</div>
+        <div class="showcase__price">${money(p.precio)}</div>
+        <button class="btn btn--primary" data-add-showcase="${p.sku}" ${p.stock <= 0 ? "disabled" : ""}>
+          ${p.stock <= 0 ? "Agotado" : "Agregar al carrito 🛒"}
+        </button>
+      </div>`;
+    botones.forEach((b, bi) => b.classList.toggle("active", bi === i));
+    const addBtn = stage.querySelector("[data-add-showcase]");
+    if (addBtn) addBtn.addEventListener("click", () => addToCart(addBtn.dataset.addShowcase));
+  };
+  const avanzar = (i) => { idx = (i + seleccion.length) % seleccion.length; pintar(idx); };
+
+  botones.forEach((b) =>
+    b.addEventListener("click", () => { avanzar(Number(b.dataset.i)); reiniciarTimer(); })
+  );
+  const reiniciarTimer = () => {
+    clearInterval(showcaseTimer);
+    showcaseTimer = setInterval(() => avanzar(idx + 1), 20000); // cambia cada 20 segundos
+  };
+
+  pintar(0);
+  reiniciarTimer();
 }
 
 // ---------- Contacto / servicio al cliente ----------

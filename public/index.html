@@ -4,13 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>El Garaje de Rochi — Vitaminas y Suplementos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Cinta de anuncios en movimiento -->
+    <div class="ticker" id="ticker"><div class="ticker__track" id="tickerTrack"></div></div>
+
     <!-- Barra superior -->
     <header class="topbar">
       <div class="brand">
-        <div class="brand__logo" id="brandLogo">GR</div>
+        <div class="brand__logo" id="brandLogo"><span class="brand__mono">gr</span></div>
         <div class="brand__name" id="brandName">El Garaje de Rochi</div>
       </div>
       <nav class="nav" id="nav"></nav>
@@ -25,6 +31,13 @@
     </header>
 
     <div class="freeship-banner" id="freeshipBanner"></div>
+
+    <!-- Lo más pedido (showcase rotativo) -->
+    <section class="showcase" id="showcase" hidden>
+      <div class="showcase__label">🔥 Lo más pedido</div>
+      <div class="showcase__stage" id="showcaseStage"></div>
+      <div class="showcase__dots" id="showcaseDots"></div>
+    </section>
 
     <!-- Destacados -->
     <section class="hero">
