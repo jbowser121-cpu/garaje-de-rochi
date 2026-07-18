@@ -47,6 +47,8 @@ export async function responder(mensajeUsuario) {
     return (
       `¡Hola! 👋 Bienvenid@ a *${tienda.nombre}*.\n` +
       `${tienda.eslogan}.\n\n` +
+      `🛒 *Compra fácil en nuestra página:*\n${TIENDA_URL}\n\n` +
+      `🛵 Domicilio *GRATIS* en Granada, Meta · Envíos a todo el país.\n\n` +
       `¿En qué te ayudo? Puedes preguntarme por:\n` +
       `• *Precio* de un producto (ej: "precio melatonina")\n` +
       `• *Disponibilidad* / existencias\n` +
@@ -130,7 +132,7 @@ export async function responder(mensajeUsuario) {
       const top = productos.slice(0, 4);
       const lineas = top
         .map((p) => {
-          const disp = p.stock > 0 ? `✅ ${p.stock} disponibles` : "❌ agotado";
+          const disp = p.stock > 0 ? "✅ Disponible" : "❌ Agotado";
           return `*${p.nombre}*\n${money(p.precio)} — ${disp}`;
         })
         .join("\n\n");
