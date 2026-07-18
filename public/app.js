@@ -111,7 +111,7 @@ function renderShowcase() {
   );
   const reiniciarTimer = () => {
     clearInterval(showcaseTimer);
-    showcaseTimer = setInterval(() => avanzar(idx + 1), 20000); // cambia cada 20 segundos
+    showcaseTimer = setInterval(() => avanzar(idx + 1), 10000); // cambia cada 10 segundos
   };
 
   pintar(0);
