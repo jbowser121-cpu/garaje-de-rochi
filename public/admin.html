@@ -113,7 +113,7 @@
               <thead>
                 <tr>
                   <th>Foto</th><th>Imagen (URL)</th><th>Nombre</th><th>Marca</th>
-                  <th>Categoría</th><th class="col-precio">Precio</th><th class="col-stock">Stock</th><th>Dest.</th><th></th>
+                  <th>Categoría</th><th class="col-precio">Precio</th><th class="col-stock">Stock</th><th>Agotado</th><th>Dest.</th><th></th>
                 </tr>
               </thead>
               <tbody id="tbody"></tbody>
@@ -328,6 +328,7 @@
           <td style="min-width:130px"><select data-f="categoria">${catOptions(p.categoria)}</select></td>
           <td class="col-precio" style="min-width:100px"><input data-f="precio" type="number" value="${p.precio}" /></td>
           <td class="col-stock" style="min-width:70px"><input data-f="stock" type="number" value="${p.stock}" /></td>
+          <td style="text-align:center"><input data-f="agotado" type="checkbox" ${p.stock <= 0 ? "checked" : ""} title="Marcar como agotado"></td>
           <td style="text-align:center"><input data-f="destacado" type="checkbox" ${p.destacado ? "checked" : ""}></td>
           <td>
             <div class="row-actions">
@@ -360,6 +361,16 @@
               tr.querySelector(".thumb").src = inp.value.trim();
               tr.querySelector(".thumb").style.visibility = "visible";
             });
+          });
+          // La casilla "Agotado" pone el stock en 0 (agotado) o lo restaura a 10 (disponible).
+          const agotadoBox = tr.querySelector('[data-f="agotado"]');
+          const stockInput = tr.querySelector('[data-f="stock"]');
+          agotadoBox.addEventListener("change", () => {
+            stockInput.value = agotadoBox.checked ? 0 : 10;
+            tr.classList.add("dirty");
+          });
+          stockInput.addEventListener("input", () => {
+            agotadoBox.checked = Number(stockInput.value) <= 0;
           });
           tr.querySelector("[data-save]").onclick = async () => {
             const sku = tr.dataset.sku;
