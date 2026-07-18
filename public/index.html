@@ -64,6 +64,12 @@
           <label>Región de envío
             <select name="region" id="regionSelect" required></select>
           </label>
+          <label>Forma de pago
+            <select name="formaPago" id="formaPago" required>
+              <option value="Pago contra entrega">Pago contra entrega (pagas al recibir)</option>
+              <option value="Transferencia (Nequi / Daviplata / Bancolombia)">Transferencia (Nequi / Daviplata / Bancolombia)</option>
+            </select>
+          </label>
           <div class="resumen" id="resumenCheckout"></div>
           <div id="pagoOnline" class="pago-online" hidden>
             <button type="button" class="btn btn--pay btn--block" id="pagarWompi">

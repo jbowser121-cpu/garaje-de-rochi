@@ -125,7 +125,7 @@ export const productos = [
     nombre: "youtheory Colágeno Verisol con Biotina (345 comprimidos)",
     categoria: "suplementos",
     marca: "youtheory",
-    precio: 160000,
+    precio: 200000,
     stock: 20,
     color: "#b5651d",
     descripcion: "Colágeno Verisol con biotina. Apoya piel, cabello y uñas. 345 comprimidos.",

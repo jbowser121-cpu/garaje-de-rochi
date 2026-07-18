@@ -412,12 +412,14 @@ async function enviarPedido(e) {
   const envioTxt = data.envio.gratis
     ? (/(granada)/i.test(data.envio.region || "") ? "GRATIS (domicilio en Granada, Meta) 🛵" : "GRATIS 🎉")
     : `${money(data.envio.valor)} (${data.envio.region})`;
+  const formaPago = fd.get("formaPago") || "Pago contra entrega";
   const mensaje =
     `🛒 *NUEVO PEDIDO #${data.numero}* — ${state.tienda.nombre}\n\n` +
     `*Productos:*\n${lineasProductos}\n\n` +
     `Subtotal: ${money(data.subtotal)}\n` +
     `Envío: ${envioTxt}\n` +
     `*TOTAL A PAGAR: ${money(data.total)}*\n\n` +
+    `💳 *Forma de pago:* ${formaPago}\n\n` +
     `*Datos de entrega:*\n` +
     `👤 ${c.nombre || "-"}\n` +
     `📱 ${c.telefono || "-"}\n` +

@@ -86,13 +86,37 @@ client.on("ready", () => {
   try { fs.existsSync(QR_PNG) && fs.unlinkSync(QR_PNG); } catch {}
 });
 
+// --- Responder SOLO a chats nuevos ---
+// Guarda cuándo se le respondió por última vez a cada contacto. Si ya se le respondió
+// hace menos de VENTANA_HORAS, no se vuelve a responder (para que un humano atienda la
+// conversación). Después de ese tiempo de silencio, se considera un chat nuevo.
+const VENTANA_HORAS = 8;
+const CHATS_FILE = path.join(__dirname, "whatsapp-chats.json");
+let ultimoResponde = {};
+try { ultimoResponde = JSON.parse(fs.readFileSync(CHATS_FILE, "utf-8")); } catch {}
+const guardarChats = () => { try { fs.writeFileSync(CHATS_FILE, JSON.stringify(ultimoResponde)); } catch {} };
+
 client.on("message", async (msg) => {
   // Ignorar estados y grupos (responde solo chats directos)
   if (msg.from.endsWith("@g.us") || msg.isStatus) return;
+
+  const ahora = Date.now();
+  const ultimo = ultimoResponde[msg.from] || 0;
+  const esChatNuevo = ahora - ultimo > VENTANA_HORAS * 60 * 60 * 1000;
+
+  // Marca la actividad SIEMPRE (para que la conversación siga contando como "en curso").
+  ultimoResponde[msg.from] = ahora;
+  guardarChats();
+
+  if (!esChatNuevo) {
+    console.log(`🔕 ${msg.from}: mensaje en conversación en curso -> NO se responde (atiende un humano)`);
+    return;
+  }
+
   try {
     const respuesta = await responder(msg.body || "");
     await msg.reply(respuesta);
-    console.log(`💬 ${msg.from}: "${msg.body}" -> respondido`);
+    console.log(`💬 ${msg.from}: chat NUEVO -> respondido`);
   } catch (err) {
     console.error("Error respondiendo WhatsApp:", err.message);
   }

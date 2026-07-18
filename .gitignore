@@ -10,6 +10,7 @@ bots/whatsapp-qr.png
 bots/whatsapp-codigo.txt
 bots/whatsapp-estado.txt
 bots/whatsapp-log.txt
+bots/whatsapp-chats.json
 cloudflared-log.txt
 # Datos privados de clientes (no subir a repos públicos)
 server/data/registro/
