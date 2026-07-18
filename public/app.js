@@ -506,7 +506,13 @@ async function enviarAuth(e) {
 async function pagarEnLinea() {
   const items = Object.entries(state.cart).map(([sku, cantidad]) => ({ sku, cantidad }));
   if (!items.length) { alert("Tu carrito está vacío."); return; }
-  const region = $("#regionSelect").value;
+
+  // Exige los datos de entrega (para saber a dónde despachar).
+  const form = $("#checkoutForm");
+  if (!form.reportValidity()) return;
+  const fd = new FormData(form);
+  const region = fd.get("region");
+
   const res = await fetch("/api/pago/preparar", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -515,15 +521,24 @@ async function pagarEnLinea() {
   const data = await res.json();
   if (!res.ok) { alert(data.error || "No se pudo iniciar el pago."); return; }
 
-  // Redirige al Checkout seguro de Wompi (procesa PSE y tarjetas).
+  // Redirige al Checkout seguro de Wompi (procesa PSE y tarjetas), enviando
+  // los datos del cliente y la dirección de entrega para que queden con el pago.
   const url = new URL("https://checkout.wompi.co/p/");
   url.searchParams.set("public-key", data.publicKey);
   url.searchParams.set("currency", data.currency);
   url.searchParams.set("amount-in-cents", data.amountInCents);
   url.searchParams.set("reference", data.reference);
   url.searchParams.set("signature:integrity", data.signature);
-  url.searchParams.set("redirect-url", window.location.origin);
+  url.searchParams.set("redirect-url", state.publicUrl || window.location.origin);
+  url.searchParams.set("customer-data:full-name", fd.get("nombre") || "");
+  url.searchParams.set("customer-data:phone-number", fd.get("telefono") || "");
   if (state.cliente?.email) url.searchParams.set("customer-data:email", state.cliente.email);
+  url.searchParams.set("shipping-address:address-line-1", fd.get("direccion") || "");
+  url.searchParams.set("shipping-address:city", fd.get("ciudad") || "");
+  url.searchParams.set("shipping-address:region", region || "");
+  url.searchParams.set("shipping-address:name", fd.get("nombre") || "");
+  url.searchParams.set("shipping-address:phone-number", fd.get("telefono") || "");
+  url.searchParams.set("shipping-address:country", "CO");
   window.location.href = url.toString();
 }
 
