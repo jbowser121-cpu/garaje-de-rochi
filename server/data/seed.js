@@ -1,6 +1,7 @@
 // Catálogo de El Garaje de Rochi. Precios en COP (pesos colombianos).
 // Las imágenes se cargan como URL (fondo blanco); si falta, se muestra un color de marca.
 import { imagenesProductos } from "./imagenes.js";
+import { descripcionesProductos } from "./descripciones.js";
 
 export const categorias = [
   { id: "suplementos", nombre: "Suplementos" },
@@ -249,6 +250,13 @@ for (const p of productos) {
   if (fotos) {
     p.imagen = fotos.imagen || "";
     p.imagenes = fotos.imagenes || (fotos.imagen ? [fotos.imagen] : []);
+  }
+  // Descripción completa (por qué elegirlo, para qué sirve, uso sugerido).
+  const desc = descripcionesProductos[p.sku];
+  if (desc) {
+    if (desc.descripcion) p.descripcion = desc.descripcion;
+    if (desc.paraQue) p.paraQue = desc.paraQue;
+    if (desc.modoUso) p.modoUso = desc.modoUso;
   }
 }
 

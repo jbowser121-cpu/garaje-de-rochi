@@ -287,26 +287,81 @@ function abrirProducto(sku) {
     thumbs.innerHTML = "";
   }
 
+  // Secciones tipo acordeón (como en una tienda profesional).
   const secciones = [
-    ["Para qué sirve", p.paraQue],
-    ["Propiedades", p.propiedades],
-    ["Contenido", p.contenido],
-    ["Modo de uso", p.modoUso],
-    ["Descripción", p.descripcion],
+    ["Descripción", p.descripcion, true],
+    ["¿Por qué elegirlo? / Para qué sirve", p.paraQue, false],
+    ["Uso sugerido", p.modoUso, false],
+    ["Tiempo de envío", textoEnvios(), false],
+    ["Métodos de pago", textoPagos(), false],
   ];
-  const html = secciones
-    .filter(([, val]) => val && val.trim())
-    .map(([tit, val]) => `<div class="pm__section"><h4>${tit}</h4><p>${escapeHtml(val)}</p></div>`)
+  $("#pmSections").innerHTML = secciones
+    .filter(([, val]) => val && String(val).trim())
+    .map(([tit, val, open]) =>
+      `<details class="pm__acc" ${open ? "open" : ""}>
+         <summary><span class="h4">${tit}</span></summary>
+         <div class="pm__acc__body">${escapeHtml(val)}</div>
+       </details>`
+    )
     .join("");
-  $("#pmSections").innerHTML = html || `<p style="color:var(--muted)">Información del producto próximamente.</p>`;
 
   const addBtn = $("#pmAdd");
   addBtn.disabled = p.stock <= 0;
-  addBtn.textContent = p.stock <= 0 ? "Agotado" : "Agregar al carrito";
+  addBtn.textContent = p.stock <= 0 ? "Agotado" : "Agregar al carrito 🛒";
   addBtn.onclick = () => { addToCart(sku); cerrarProducto(); };
+
+  renderSugerencias(sku);
 
   $("#productModal").classList.add("open");
   $("#productModal").setAttribute("aria-hidden", "false");
+  const box = $("#productModal").querySelector(".modal__box");
+  if (box) box.scrollTop = 0;
+}
+
+// Texto de tiempos de envío (desde la configuración).
+function textoEnvios() {
+  const e = state.envios;
+  if (!e) return "";
+  const lineas = e.tarifas.map((t) =>
+    `${t.valor === 0 ? "🛵" : "🚚"} ${t.region}: ${t.valor === 0 ? "GRATIS" : money(t.valor)} — ${t.dias}`
+  );
+  return lineas.join("\n") + `\n✅ Envío GRATIS en compras desde ${money(e.umbralEnvioGratis)}.`;
+}
+
+// Texto de métodos de pago.
+function textoPagos() {
+  const lineas = [];
+  if (state.pago?.habilitado) lineas.push("💳 Tarjeta débito o crédito y PSE (pago seguro con Wompi).");
+  lineas.push("🏪 Pago contra entrega (pagas al recibir).");
+  lineas.push("💸 Transferencia: Nequi, Daviplata o Bancolombia.");
+  return lineas.join("\n");
+}
+
+// 5 productos sugeridos (distintos al actual).
+function renderSugerencias(skuActual) {
+  const cont = $("#pmSugerencias");
+  const otros = state.productos.filter((p) => p.sku !== skuActual && p.imagen);
+  // barajar y tomar 5
+  for (let i = otros.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [otros[i], otros[j]] = [otros[j], otros[i]];
+  }
+  const cinco = otros.slice(0, 5);
+  if (cinco.length === 0) { cont.innerHTML = ""; return; }
+  cont.innerHTML =
+    `<h3>🛍️ También te puede interesar</h3><div class="pm__sug-grid">` +
+    cinco
+      .map((p) => `
+        <div class="pm__sug" data-sug="${p.sku}">
+          <img src="${p.imagen}" alt="${p.nombre}" onerror="this.style.visibility='hidden'">
+          <div class="pm__sug__name">${p.nombre}</div>
+          <div class="pm__sug__price">${money(p.precio)}</div>
+        </div>`)
+      .join("") +
+    `</div>`;
+  cont.querySelectorAll("[data-sug]").forEach((el) =>
+    el.addEventListener("click", () => abrirProducto(el.dataset.sug))
+  );
 }
 function cerrarProducto() {
   $("#productModal").classList.remove("open");
@@ -640,6 +695,10 @@ function bindEvents() {
   // Detalle de producto
   $("#cerrarProducto").addEventListener("click", cerrarProducto);
   $("#productModal").addEventListener("click", (e) => { if (e.target.id === "productModal") cerrarProducto(); });
+
+  // Versículo flotante (cerrar)
+  const verseClose = document.getElementById("verseClose");
+  if (verseClose) verseClose.addEventListener("click", () => document.getElementById("verse").classList.add("hidden"));
 
   // Contacto / servicio al cliente
   $("#contactoBtn").addEventListener("click", abrirContacto);
