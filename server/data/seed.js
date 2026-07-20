@@ -247,7 +247,7 @@ export const productos = [
     nombre: "Natrol Melatonina 5 mg Disolución Rápida (250 tabletas)",
     categoria: "suplementos",
     marca: "Natrol",
-    precio: 90000, // PRECIO ESTIMADO - confirmar con el negocio
+    precio: 140000,
     stock: 20,
     color: "#5b3f8c",
     descripcion: "Melatonina de 5 mg de disolución rápida. Ayuda a conciliar el sueño. 250 tabletas.",
@@ -258,7 +258,7 @@ export const productos = [
     nombre: "trunature Probiótico Digestivo Avanzado (100 cápsulas)",
     categoria: "suplementos",
     marca: "trunature",
-    precio: 140000, // PRECIO ESTIMADO - confirmar con el negocio
+    precio: 130000,
     stock: 20,
     color: "#3b8f6a",
     descripcion: "Probiótico digestivo avanzado con cultivos vivos. Apoya la salud digestiva. 100 cápsulas.",

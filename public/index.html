@@ -4,6 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>El Garaje de Rochi — Vitaminas y Suplementos</title>
+    <!-- App instalable (PWA) -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#4fb8ab" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Garaje de Rochi" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
@@ -22,6 +30,7 @@
       <nav class="nav" id="nav"></nav>
       <div class="actions">
         <input id="buscar" class="search" type="search" placeholder="Buscar producto o marca…" />
+        <button class="account-btn install-btn" id="installBtn" hidden>📲 <span>Instalar app</span></button>
         <button class="account-btn" id="contactoBtn" aria-label="Servicio al cliente">📞 <span>Contacto</span></button>
         <button class="account-btn" id="accountBtn" aria-label="Mi cuenta">👤 <span id="accountLabel">Ingresar</span></button>
         <button class="cart-btn" id="abrirCarrito" aria-label="Carrito">
@@ -184,6 +193,55 @@
       <p class="footer__muted">Los suplementos no reemplazan una dieta equilibrada ni tratamiento médico. Consulta a tu profesional de salud.</p>
     </footer>
 
+    <!-- Modal: cómo instalar la app -->
+    <div class="modal" id="installModal" aria-hidden="true">
+      <div class="modal__box modal__box--sm">
+        <div class="modal__head">
+          <h2>📲 Instalar la app</h2>
+          <button id="cerrarInstall" class="icon-btn" aria-label="Cerrar">✕</button>
+        </div>
+        <div id="installBody" style="padding:18px;font-size:14px;line-height:1.6"></div>
+      </div>
+    </div>
+
+    <script>
+      // Registrar el service worker (hace la web instalable como app).
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+      }
+      // Captura el evento de instalación (Android/Chrome) y muestra el botón.
+      let deferredInstall = null;
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredInstall = e;
+        const b = document.getElementById("installBtn");
+        if (b) b.hidden = false;
+      });
+      window.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("installBtn");
+        const modal = document.getElementById("installModal");
+        const body = document.getElementById("installBody");
+        const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        const yaInstalada = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+        // En iPhone no existe el botón automático: mostramos el botón con instrucciones.
+        if (esIOS && !yaInstalada && btn) btn.hidden = false;
+        btn?.addEventListener("click", async () => {
+          if (deferredInstall) {
+            deferredInstall.prompt();
+            await deferredInstall.userChoice;
+            deferredInstall = null;
+            btn.hidden = true;
+            return;
+          }
+          body.innerHTML = esIOS
+            ? `Para instalar en tu iPhone/iPad:<br><br>1. Toca el botón <b>Compartir</b> (el cuadrito con la flecha ⬆️) abajo en Safari.<br>2. Baja y toca <b>"Agregar a inicio"</b>.<br>3. Toca <b>Agregar</b>. ¡Listo, queda como una app! 🎉`
+            : `En tu celular Android:<br><br>1. Toca el menú <b>⋮</b> (arriba a la derecha).<br>2. Elige <b>"Instalar aplicación"</b> o <b>"Agregar a pantalla de inicio"</b>.<br>3. Confirma. ¡Listo! 🎉`;
+          modal.classList.add("open");
+        });
+        document.getElementById("cerrarInstall")?.addEventListener("click", () => modal.classList.remove("open"));
+        modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+      });
+    </script>
     <script src="app.js" type="module"></script>
   </body>
 </html>
