@@ -106,4 +106,14 @@ export const descripcionesProductos = {
     paraQue: "• Apoya los niveles de energía.\n• Cuida el sistema nervioso.\n• Ayuda a la formación de glóbulos rojos.\n• Disolución rápida, sin agua.",
     modoUso: "Disolver 1 tableta debajo de la lengua al día.",
   },
+  "SUP-MELA-250": {
+    descripcion: "Melatonina de 5 mg de Natrol, de disolución rápida y sabor agradable. La ayuda natural para dormir mejor, sin agua y sin fármacos que generen dependencia.",
+    paraQue: "• Ayuda a conciliar el sueño más rápido.\n• Favorece un descanso reparador.\n• Ideal para regular el horario de sueño.\n• 100% libre de fármacos.",
+    modoUso: "Tomar 1 tableta 20 minutos antes de acostarte. Deja que se disuelva en la boca.",
+  },
+  "SUP-PROBIO-100": {
+    descripcion: "Probiótico digestivo avanzado de trunature, con cultivos vivos que apoyan el equilibrio de tu flora intestinal y una digestión saludable.",
+    paraQue: "• Apoya la salud digestiva.\n• Equilibra la flora intestinal.\n• Favorece la absorción de nutrientes.\n• Ayuda al sistema inmune.",
+    modoUso: "Tomar 1 cápsula al día con alimentos.",
+  },
 };

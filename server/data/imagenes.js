@@ -23,4 +23,6 @@ export const imagenesProductos = {
   "SUP-RESV-140": { imagen: "/fotos/SUP-RESV-140/1.png", imagenes: ["/fotos/SUP-RESV-140/1.png", "/fotos/SUP-RESV-140/2.png", "/fotos/SUP-RESV-140/3.png"] },
   "SUP-ACV-120": { imagen: "/fotos/SUP-ACV-120/1.png", imagenes: ["/fotos/SUP-ACV-120/1.png", "/fotos/SUP-ACV-120/2.png", "/fotos/SUP-ACV-120/3.png"] },
   "VM-B12-300": { imagen: "/fotos/VM-B12-300/1.png", imagenes: ["/fotos/VM-B12-300/1.png", "/fotos/VM-B12-300/2.png"] },
+  "SUP-MELA-250": { imagen: "/fotos/SUP-MELA-250/1.png", imagenes: ["/fotos/SUP-MELA-250/1.png", "/fotos/SUP-MELA-250/2.png", "/fotos/SUP-MELA-250/3.png"] },
+  "SUP-PROBIO-100": { imagen: "/fotos/SUP-PROBIO-100/1.png", imagenes: ["/fotos/SUP-PROBIO-100/1.png", "/fotos/SUP-PROBIO-100/2.png"] },
 };
