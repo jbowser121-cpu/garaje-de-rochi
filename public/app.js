@@ -96,9 +96,9 @@ function renderShowcase() {
         <div class="showcase__brand">${p.marca || ""}</div>
         <div class="showcase__name">${p.nombre}</div>
         <div class="showcase__price">${money(p.precio)}</div>
-        <button class="btn btn--primary" data-add-showcase="${p.sku}" ${p.stock <= 0 ? "disabled" : ""}>
-          ${p.stock <= 0 ? "Agotado" : "Agregar al carrito 🛒"}
-        </button>
+        ${p.stock <= 0
+          ? `<div class="agotado-aviso">⏳ Agotado por el momento — a espera de llegada</div>`
+          : `<button class="btn btn--primary" data-add-showcase="${p.sku}">Agregar al carrito 🛒</button>`}
       </div>`;
     botones.forEach((b, bi) => b.classList.toggle("active", bi === i));
     const addBtn = stage.querySelector("[data-add-showcase]");
@@ -232,9 +232,10 @@ function renderGrid() {
       const enCarrito = state.cart[p.sku] || 0;
       const agotado = p.stock <= 0;
       return `
-      <article class="card">
+      <article class="card ${agotado ? "card--agotado" : ""}">
         <div class="card__img" style="background:${p.color}22" data-ver="${p.sku}" title="Ver más grande">
-          ${p.destacado ? '<span class="card__pill">★ Destacado</span>' : ""}
+          ${p.destacado && !agotado ? '<span class="card__pill">★ Destacado</span>' : ""}
+          ${agotado ? '<span class="card__agotado-badge">Agotado</span>' : ""}
           ${bottle(p)}
           ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" class="card__photo" loading="lazy" onerror="this.remove()">` : ""}
         </div>
@@ -243,9 +244,11 @@ function renderGrid() {
           <div class="card__name">${p.nombre}</div>
           <div class="card__price">${money(p.precio)}</div>
           <div class="card__actions">
-            <button class="btn btn--primary btn--block" data-add="${p.sku}" ${agotado ? "disabled" : ""}>
-              ${agotado ? "Agotado" : enCarrito ? `En carrito (${enCarrito}) · Agregar` : "Agregar al carrito"}
-            </button>
+            ${agotado
+              ? `<div class="agotado-aviso">⏳ Agotado por el momento<br><small>a espera de llegada</small></div>`
+              : `<button class="btn btn--primary btn--block" data-add="${p.sku}">
+                   ${enCarrito ? `En carrito (${enCarrito}) · Agregar` : "Agregar al carrito"}
+                 </button>`}
           </div>
         </div>
       </article>`;
@@ -306,9 +309,14 @@ function abrirProducto(sku) {
     .join("");
 
   const addBtn = $("#pmAdd");
-  addBtn.disabled = p.stock <= 0;
-  addBtn.textContent = p.stock <= 0 ? "Agotado" : "Agregar al carrito 🛒";
-  addBtn.onclick = () => { addToCart(sku); cerrarProducto(); };
+  if (p.stock <= 0) {
+    addBtn.outerHTML = `<div class="agotado-aviso agotado-aviso--grande" id="pmAdd">⏳ Agotado por el momento — a espera de llegada</div>`;
+  } else {
+    // Reconstruir como botón por si venía de un producto agotado.
+    const prev = $("#pmAdd");
+    prev.outerHTML = `<button class="btn btn--primary btn--block" id="pmAdd">Agregar al carrito 🛒</button>`;
+    $("#pmAdd").onclick = () => { addToCart(sku); cerrarProducto(); };
+  }
 
   renderSugerencias(sku);
 

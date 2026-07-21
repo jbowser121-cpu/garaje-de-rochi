@@ -2,6 +2,7 @@
 // Las imágenes se cargan como URL (fondo blanco); si falta, se muestra un color de marca.
 import { imagenesProductos } from "./imagenes.js";
 import { descripcionesProductos } from "./descripciones.js";
+import { inventario } from "./inventario.js";
 
 export const categorias = [
   { id: "suplementos", nombre: "Suplementos" },
@@ -279,6 +280,10 @@ for (const p of productos) {
     if (desc.descripcion) p.descripcion = desc.descripcion;
     if (desc.paraQue) p.paraQue = desc.paraQue;
     if (desc.modoUso) p.modoUso = desc.modoUso;
+  }
+  // Inventario (cantidad en existencia) leído de las carpetas del negocio.
+  if (Object.prototype.hasOwnProperty.call(inventario, p.sku)) {
+    p.stock = Math.max(0, Number(inventario[p.sku]) || 0);
   }
 }
 
