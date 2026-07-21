@@ -708,6 +708,16 @@ function bindEvents() {
   const verseClose = document.getElementById("verseClose");
   if (verseClose) verseClose.addEventListener("click", () => document.getElementById("verse").classList.add("hidden"));
 
+  // Casilla "te lo conseguimos" -> WhatsApp
+  $("#conseguirForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const prod = $("#conseguirInput").value.trim();
+    const texto = prod
+      ? `Hola El Garaje de Rochi 🌿, quiero que me consigan este producto: *${prod}*. ¿Me ayudan?`
+      : `Hola El Garaje de Rochi 🌿, quiero que me consigan un producto que no vi en la página. ¿Me ayudan?`;
+    window.open(`https://wa.me/${state.tienda.whatsapp}?text=${encodeURIComponent(texto)}`, "_blank");
+  });
+
   // Contacto / servicio al cliente
   $("#contactoBtn").addEventListener("click", abrirContacto);
   $("#cerrarContacto").addEventListener("click", cerrarContacto);

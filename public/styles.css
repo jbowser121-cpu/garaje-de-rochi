@@ -130,6 +130,23 @@ a { color: inherit; }
   .brand__name { display: none; }
 }
 
+/* Casilla "te lo conseguimos" */
+.conseguir { max-width: 760px; margin: 16px auto 4px; padding: 0 20px; }
+.conseguir__box {
+  background: linear-gradient(135deg, #eafff6, #d7f0ec); border: 1px solid #bfe6dd;
+  border-radius: 14px; padding: 16px 18px; text-align: center;
+}
+.conseguir__texto { color: var(--teal-deep); font-size: 15px; margin-bottom: 10px; }
+.conseguir__form { display: flex; gap: 8px; }
+.conseguir__form input {
+  flex: 1; padding: 11px 14px; border: 1px solid #bfe6dd; border-radius: 10px;
+  font-size: 14px; outline: none; font-family: inherit;
+}
+.conseguir__form input:focus { border-color: var(--teal); }
+.conseguir__btn { background: #25d366; color: #fff; white-space: nowrap; }
+.conseguir__btn:hover { background: #1fb959; }
+@media (max-width: 560px) { .conseguir__form { flex-direction: column; } }
+
 /* Hero */
 .hero { text-align: center; padding: 30px 20px 6px; }
 .hero__title { margin: 0; font-size: 28px; color: var(--teal-deep); }

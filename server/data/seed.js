@@ -270,7 +270,7 @@ export const productos = [
     nombre: "Carlyle Panax Ginseng + Ginkgo Biloba 5.000 mg (120 cápsulas)",
     categoria: "suplementos",
     marca: "Carlyle",
-    precio: 120000, // PRECIO ESTIMADO - confirmar con el negocio
+    precio: 120000,
     stock: 20,
     color: "#a8763b",
     descripcion: "Panax ginseng con ginkgo biloba, 5.000 mg. Apoya la energía y la concentración. 120 cápsulas vegetarianas.",
@@ -281,7 +281,7 @@ export const productos = [
     nombre: "Nature Made Vitamina D3 25 mcg (650 softgels)",
     categoria: "vitaminas-minerales",
     marca: "Nature Made",
-    precio: 130000, // PRECIO ESTIMADO - confirmar con el negocio
+    precio: 140000,
     stock: 20,
     color: "#e0a020",
     descripcion: "Vitamina D3 de 25 mcg (1000 UI). Apoya los huesos, los dientes y el sistema inmune. 650 cápsulas blandas.",
