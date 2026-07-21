@@ -24,6 +24,6 @@ export const inventario = {
   "SUP-RESV-140": 0,
   "SUP-ACV-120": 0,
   "VM-B12-300": 0,
-  "SUP-MELA-250": 0,
+  "SUP-MELA-250": 5,
   "SUP-PROBIO-100": 2,
 };
