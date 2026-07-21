@@ -116,4 +116,14 @@ export const descripcionesProductos = {
     paraQue: "• Apoya la salud digestiva.\n• Equilibra la flora intestinal.\n• Favorece la absorción de nutrientes.\n• Ayuda al sistema inmune.",
     modoUso: "Tomar 1 cápsula al día con alimentos.",
   },
+  "SUP-GINSENG-120": {
+    descripcion: "Panax Ginseng con Ginkgo Biloba de Carlyle, 5.000 mg. Una combinación tradicional para la energía, la memoria y la concentración.",
+    paraQue: "• Apoya la energía y la vitalidad.\n• Favorece la memoria y la concentración.\n• Ayuda a la circulación.\n• Cápsulas vegetarianas.",
+    modoUso: "Tomar 1 cápsula al día con alimentos.",
+  },
+  "VM-VITD3-650": {
+    descripcion: "Vitamina D3 de Nature Made, 25 mcg (1.000 UI) por cápsula. Esencial para la salud de tus huesos y tu sistema inmune, ¡en un frasco que rinde muchísimo!",
+    paraQue: "• Fortalece huesos y dientes.\n• Apoya el sistema inmune.\n• Ayuda a la absorción del calcio.\n• Apoya la función muscular.",
+    modoUso: "Tomar 1 cápsula blanda al día con alimentos.",
+  },
 };
