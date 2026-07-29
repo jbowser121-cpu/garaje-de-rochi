@@ -287,6 +287,17 @@ export const productos = [
     descripcion: "Vitamina D3 de 25 mcg (1000 UI). Apoya los huesos, los dientes y el sistema inmune. 650 cápsulas blandas.",
     destacado: false,
   },
+  {
+    sku: "VM-SELENIO-240",
+    nombre: "Nutricost Selenio 200 mcg (240 cápsulas)",
+    categoria: "vitaminas-minerales",
+    marca: "Nutricost",
+    precio: 160000,
+    stock: 20,
+    color: "#6a8caf",
+    descripcion: "Selenio de 200 mcg de Nutricost. Mineral antioxidante que apoya la tiroides y el sistema inmune. 240 cápsulas.",
+    destacado: false,
+  },
 ];
 
 // Aplica las fotos (imagen + galería) a cada producto por SKU.

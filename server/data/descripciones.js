@@ -126,4 +126,9 @@ export const descripcionesProductos = {
     paraQue: "• Fortalece huesos y dientes.\n• Apoya el sistema inmune.\n• Ayuda a la absorción del calcio.\n• Apoya la función muscular.",
     modoUso: "Tomar 1 cápsula blanda al día con alimentos.",
   },
+  "VM-SELENIO-240": {
+    descripcion: "Selenio de 200 mcg de Nutricost, un mineral antioxidante esencial. Frasco rendidor de 240 cápsulas para cuidar tu tiroides y tus defensas.",
+    paraQue: "• Poderoso antioxidante que protege las células.\n• Apoya la función de la tiroides.\n• Refuerza el sistema inmune.\n• Contribuye a la salud del cabello y las uñas.",
+    modoUso: "Tomar 1 cápsula al día con alimentos.",
+  },
 };
