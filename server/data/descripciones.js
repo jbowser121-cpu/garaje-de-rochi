@@ -131,4 +131,9 @@ export const descripcionesProductos = {
     paraQue: "• Poderoso antioxidante que protege las células.\n• Apoya la función de la tiroides.\n• Refuerza el sistema inmune.\n• Contribuye a la salud del cabello y las uñas.",
     modoUso: "Tomar 1 cápsula al día con alimentos.",
   },
+  "CP-MINOXIDIL": {
+    descripcion: "Kirkland Minoxidil 5% (Extra Strength), la solución tópica #1 recomendada por dermatólogos para regenerar el cabello en hombres. Se vende por tubo/frasco de 60 mL.",
+    paraQue: "• Ayuda a regenerar el cabello.\n• Reactiva los folículos capilares.\n• Ideal para zonas con pérdida de cabello.\n• Solución tópica al 5%.",
+    modoUso: "Aplicar 1 mL en el cuero cabelludo seco, 2 veces al día. ⚠️ Solo para hombres — no usar en mujeres.",
+  },
 };

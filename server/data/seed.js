@@ -298,6 +298,17 @@ export const productos = [
     descripcion: "Selenio de 200 mcg de Nutricost. Mineral antioxidante que apoya la tiroides y el sistema inmune. 240 cápsulas.",
     destacado: false,
   },
+  {
+    sku: "CP-MINOXIDIL",
+    nombre: "Kirkland Minoxidil 5% para hombres (tubo 60 mL)",
+    categoria: "cuidado-personal",
+    marca: "Kirkland Signature",
+    precio: 60000,
+    stock: 20,
+    color: "#1f3a93",
+    descripcion: "Kirkland Minoxidil 5% (Extra Strength), tratamiento tópico para el crecimiento del cabello en hombres. Precio por tubo de 60 mL.",
+    destacado: false,
+  },
 ];
 
 // Aplica las fotos (imagen + galería) a cada producto por SKU.
