@@ -29,5 +29,5 @@ export const inventario = {
   "SUP-GINSENG-120": 1,
   "VM-VITD3-650": 1,
   "VM-SELENIO-240": 1,
-  "CP-MINOXIDIL": 5,
+  "CP-MINOXIDIL": 10,
 };
