@@ -360,7 +360,6 @@ export const tienda = {
   contacto: {
     ventas: [
       { nombre: "Ventas", numero: "573144503681", display: "+57 314 450 3681" },
-      { nombre: "Ventas", numero: "573219610582", display: "+57 321 961 0582" },
     ],
     soporte: { nombre: "Soporte de la página", numero: "573145190186", display: "+57 314 519 0186" },
     direccion: "Calle 34 # 7-27, Granada, Meta",

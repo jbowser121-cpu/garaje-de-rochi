@@ -79,7 +79,11 @@ function cargar() {
       data = JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
       // Migración suave: garantiza campos nuevos en datos antiguos.
       if (!Array.isArray(data.clientes)) data.clientes = [];
-      if (!data.tienda.contacto) data.tienda.contacto = tienda.contacto;
+      // Los datos de contacto viven en seed.js: si se quita un número de ahí, tiene que
+      // desaparecer también de la tienda guardada (si no, un store.json viejo lo revive).
+      data.tienda.contacto = tienda.contacto;
+      data.tienda.whatsapp = tienda.whatsapp;
+      data.tienda.instagram = tienda.instagram;
       data.productos.forEach((p) => {
         if (p.imagen === undefined) p.imagen = "";
         if (!Array.isArray(p.imagenes)) p.imagenes = [];
