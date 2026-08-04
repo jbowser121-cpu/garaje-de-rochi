@@ -514,6 +514,7 @@ async function enviarPedido(e) {
   const payload = {
     items,
     region: fd.get("region"),
+    formaPago: fd.get("formaPago") || "Pago contra entrega",
     cliente: {
       nombre: fd.get("nombre"),
       telefono: fd.get("telefono"),

@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import "dotenv/config";
 import { db } from "./db.js";
+import { avisar, mensajePedido } from "./avisos.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -127,13 +128,88 @@ app.post("/api/pago/preparar", (req, res) => {
 });
 
 // Crear pedido (checkout). Valida stock y lo descuenta.
-app.post("/api/pedidos", (req, res) => {
+app.post("/api/pedidos", async (req, res) => {
   try {
-    const { items, cliente, region } = req.body || {};
+    const { items, cliente, region, formaPago } = req.body || {};
     const pedido = db.crearPedido({ items, cliente, region });
     res.status(201).json(pedido);
+
+    // Aviso al dueño DESDE EL SERVIDOR: llega aunque el cliente cierre la página
+    // sin tocar el botón de WhatsApp. Va después de responder para no demorar la compra.
+    try {
+      const texto = mensajePedido({
+        titulo: `NUEVO PEDIDO #${pedido.numero} — ${db.tienda.nombre}`,
+        items: pedido.items.map((i) => ({ nombre: i.nombre, cantidad: i.cantidad, precio: i.precio })),
+        subtotal: pedido.subtotal,
+        total: pedido.total,
+        envio: pedido.envio?.gratis
+          ? `GRATIS (${pedido.envio.region || region})`
+          : `$ ${Number(pedido.envio?.valor || 0).toLocaleString("es-CO")} — ${pedido.envio?.region || region}`,
+        pago: formaPago || "Pago contra entrega",
+        estado: "Pendiente de confirmar el pago",
+        cliente: {
+          nombre: cliente?.nombre,
+          celular: cliente?.telefono,
+          direccion: cliente?.direccion,
+          ciudad: cliente?.ciudad,
+        },
+        referencia: `Pedido #${pedido.numero}`,
+      });
+      await avisar(texto, `Nuevo pedido #${pedido.numero} — ${db.tienda.nombre}`);
+    } catch (e) {
+      console.error("No se pudo avisar del pedido:", e);
+    }
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// ---------- Webhook de Wompi ----------
+// Wompi llama aquí cuando cambia el estado de un pago. Es servidor a servidor:
+// llega aunque el cliente cierre el navegador, y trae los datos de envío.
+app.post("/api/wompi/webhook", async (req, res) => {
+  res.status(200).json({ ok: true }); // a Wompi se le responde rápido o reintenta
+  try {
+    const evento = req.body || {};
+    const t = evento?.data?.transaction;
+    if (!t) return;
+
+    const secreto = process.env.WOMPI_EVENTS_SECRET || "";
+    let verificado = false;
+    if (secreto && evento.signature?.checksum) {
+      const partes = (evento.signature.properties || []).map((ruta) =>
+        ruta.split(".").reduce((o, k) => (o == null ? o : o[k]), evento.data)
+      );
+      const calculado = crypto
+        .createHash("sha256")
+        .update(partes.join("") + String(evento.timestamp) + secreto)
+        .digest("hex");
+      verificado = calculado.toLowerCase() === String(evento.signature.checksum).toLowerCase();
+      if (!verificado) { console.error("Webhook de Wompi con firma inválida. Se ignora."); return; }
+    }
+
+    if (t.status !== "APPROVED") return;
+
+    const dir = t.shipping_address || {};
+    const texto = mensajePedido({
+      titulo: `PAGO APROBADO — ${db.tienda.nombre}`,
+      items: [],
+      total: (t.amount_in_cents || 0) / 100,
+      pago: t.payment_method_type,
+      estado: verificado ? "PAGADO ✅ (verificado con Wompi)" : "PAGADO ✅",
+      cliente: {
+        nombre: t.customer_data?.full_name,
+        celular: t.customer_data?.phone_number || dir.phone_number,
+        cedula: t.customer_data?.legal_id,
+        direccion: [dir.address_line_1, dir.address_line_2].filter(Boolean).join(" "),
+        ciudad: [dir.city, dir.region].filter(Boolean).join(", "),
+      },
+      referencia: t.reference,
+      transaccion: t.id,
+    });
+    await avisar(texto, `PAGO APROBADO — ${db.tienda.nombre}`);
+  } catch (err) {
+    console.error("Error procesando webhook de Wompi:", err);
   }
 });
 
