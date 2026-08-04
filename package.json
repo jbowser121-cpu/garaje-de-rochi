@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
     "express": "^4.22.2",
     "qrcode": "^1.5.4"
   },

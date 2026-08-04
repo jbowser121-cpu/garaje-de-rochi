@@ -14,3 +14,5 @@ bots/whatsapp-chats.json
 cloudflared-log.txt
 # Datos privados de clientes (no subir a repos públicos)
 server/data/registro/
+inventario-anterior-*.xlsx
+~$*.xlsx

@@ -164,7 +164,7 @@ app.post("/api/admin/logout", requireAdmin, (req, res) => {
 
 // Catálogo completo para el panel (incluye todo, sin filtros)
 app.get("/api/admin/productos", requireAdmin, (req, res) => {
-  res.json({ productos: db.listarProductos(), categorias: db.categorias, tienda: db.tienda, envios: db.envios });
+  res.json({ productos: db.listarProductos({ incluirOcultos: true }), categorias: db.categorias, tienda: db.tienda, envios: db.envios });
 });
 
 app.post("/api/admin/productos", requireAdmin, (req, res) => {

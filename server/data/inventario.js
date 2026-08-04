@@ -1,6 +1,6 @@
-// Inventario de El Garaje de Rochi. Se actualiza SOLO al prender el computador
-// (lee la cantidad.txt de cada carpeta en Descargas/fotos-garaje-de-rochi).
-// No lo edites a mano: cambia los números en las carpetas.
+// Inventario de El Garaje de Rochi (cantidades en existencia).
+// Se genera desde inventario.xlsx — no lo edites a mano.
+// Última actualización: 4/8/2026, 3:35:10 p. m.
 
 export const inventario = {
   "VM-MAGCIT-180": 0,

@@ -51,6 +51,28 @@ function verifyPassword(plano, guardado) {
 
 let data;
 
+// El catálogo (qué productos hay, precio, existencias y si se muestra) manda desde
+// seed.js + inventario.xlsx. El store.json guardado solo conserva lo que se edita
+// aparte: pedidos, clientes y los textos de detalle. Sin esto, un store.json viejo
+// dejaría la tienda con precios y productos desactualizados.
+function sincronizarConCatalogo() {
+  const guardados = new Map(data.productos.map((p) => [p.sku, p]));
+  data.productos = productos.map((base) => {
+    const previo = guardados.get(base.sku);
+    if (!previo) return { imagen: "", imagenes: [], ...detalleVacio(), ...base };
+    return {
+      ...previo,
+      precio: base.precio,
+      stock: base.stock,
+      oculto: Boolean(base.oculto),
+      nombre: base.nombre,
+      categoria: base.categoria,
+      imagen: base.imagen || previo.imagen || "",
+      imagenes: base.imagenes?.length ? base.imagenes : previo.imagenes || [],
+    };
+  });
+}
+
 function cargar() {
   if (fs.existsSync(DB_PATH)) {
     try {
@@ -63,6 +85,7 @@ function cargar() {
         if (!Array.isArray(p.imagenes)) p.imagenes = [];
         for (const c of CAMPOS_DETALLE) if (p[c] === undefined) p[c] = "";
       });
+      sincronizarConCatalogo();
       return;
     } catch {
       // Si el archivo está corrupto, se regenera.
@@ -94,8 +117,10 @@ export const db = {
     return data.envios;
   },
 
-  listarProductos({ categoria, buscar } = {}) {
-    let lista = data.productos;
+  listarProductos({ categoria, buscar, incluirOcultos } = {}) {
+    // Los marcados con "Mostrar en la web = NO" en inventario.xlsx no salen en la tienda,
+    // pero sí en el panel de moderador (que pasa incluirOcultos).
+    let lista = incluirOcultos ? data.productos : data.productos.filter((p) => !p.oculto);
     if (categoria) lista = lista.filter((p) => p.categoria === categoria);
     if (buscar) {
       const q = buscar.toLowerCase();

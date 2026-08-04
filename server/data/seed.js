@@ -3,6 +3,7 @@
 import { imagenesProductos } from "./imagenes.js";
 import { descripcionesProductos } from "./descripciones.js";
 import { inventario } from "./inventario.js";
+import { ajustes } from "./ajustes.js";
 
 export const categorias = [
   { id: "suplementos", nombre: "Suplementos" },
@@ -328,6 +329,12 @@ for (const p of productos) {
   // Inventario (cantidad en existencia) leído de las carpetas del negocio.
   if (Object.prototype.hasOwnProperty.call(inventario, p.sku)) {
     p.stock = Math.max(0, Number(inventario[p.sku]) || 0);
+  }
+  // Precio y visibilidad manejados desde inventario.xlsx.
+  const aj = ajustes[p.sku];
+  if (aj) {
+    if (Number(aj.precio) > 0) p.precio = Number(aj.precio);
+    p.oculto = Boolean(aj.oculto);
   }
 }
 
