@@ -67,17 +67,35 @@ async function porTelegram(texto) {
       body: JSON.stringify(cuerpo),
     });
 
-  // Primero con negritas. Si el nombre o la dirección del cliente traen caracteres
-  // que rompen el formato (_ * [ `), Telegram rechaza el mensaje entero: en ese caso
-  // se reenvía como texto plano. Un pedido no se puede perder por un guion bajo.
-  let r = await enviar({ chat_id: chat, text: texto, parse_mode: "Markdown" });
-  if (!r.ok) {
-    const detalle = (await r.text()).slice(0, 200);
-    r = await enviar({ chat_id: chat, text: texto });
-    if (!r.ok) throw new Error(`Telegram ${r.status}: ${(await r.text()).slice(0, 120)}`);
-    console.warn("Telegram rechazó el formato, se envió sin negritas:", detalle);
+  // Se intenta primero con negritas. Si el nombre o la dirección del cliente traen
+  // caracteres que rompen el formato (_ * [ `), Telegram rechaza el mensaje entero:
+  // por eso el segundo intento va sin formato. Un pedido no se pierde por un guion bajo.
+  const intentos = [
+    { chat_id: chat, text: texto, parse_mode: "Markdown" },
+    { chat_id: chat, text: texto },
+  ];
+
+  let ultimoError = "";
+  for (const cuerpo of intentos) {
+    const r = await enviar(cuerpo);
+    if (r.ok) return "telegram";
+
+    const d = await r.json().catch(() => ({}));
+    ultimoError = `${r.status} ${d.description || ""}`.trim();
+
+    // Cuando un grupo normal se convierte en supergrupo, Telegram le cambia el id y
+    // devuelve el nuevo aquí. Se reenvía al id nuevo para no perder el pedido, y se
+    // avisa para que lo actualicen en las variables de entorno.
+    const nuevo = d?.parameters?.migrate_to_chat_id;
+    if (nuevo) {
+      const r2 = await enviar({ ...cuerpo, chat_id: nuevo });
+      if (r2.ok) {
+        console.warn(`El grupo de Telegram cambió de id. Actualiza TELEGRAM_CHAT_ID a ${nuevo}`);
+        return `telegram (OJO: cambia TELEGRAM_CHAT_ID a ${nuevo})`;
+      }
+    }
   }
-  return "telegram";
+  throw new Error(`Telegram ${ultimoError}`.slice(0, 220));
 }
 
 async function porCorreo(texto, asunto) {

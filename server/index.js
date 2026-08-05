@@ -164,6 +164,31 @@ app.post("/api/pedidos", async (req, res) => {
   }
 });
 
+// ---------- Diagnóstico de los avisos ----------
+// Dice qué canales están configurados (sin revelar ninguna clave).
+app.get("/api/aviso/estado", (req, res) => {
+  res.json({
+    telegram: Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID),
+    whatsapp: Boolean(process.env.AVISO_WHATSAPP && process.env.CALLMEBOT_APIKEY),
+    correo: Boolean(process.env.RESEND_API_KEY && process.env.AVISO_EMAIL),
+    wompiEventos: Boolean(process.env.WOMPI_EVENTS_SECRET),
+  });
+});
+
+// Manda un mensaje de prueba (texto fijo, no sirve para enviar contenido arbitrario).
+app.post("/api/aviso/probar", async (req, res) => {
+  const texto = [
+    `🧪 *PRUEBA DE AVISOS — ${db.tienda.nombre}*`,
+    "",
+    "Si estás leyendo esto, los avisos de pedidos están funcionando.",
+    "No hay ningún pedido real que despachar.",
+    "",
+    `🕒 ${new Date().toLocaleString("es-CO")}`,
+  ].join("\n");
+  const r = await avisar(texto, `Prueba de avisos — ${db.tienda.nombre}`);
+  res.json(r);
+});
+
 // ---------- Webhook de Wompi ----------
 // Wompi llama aquí cuando cambia el estado de un pago. Es servidor a servidor:
 // llega aunque el cliente cierre el navegador, y trae los datos de envío.
