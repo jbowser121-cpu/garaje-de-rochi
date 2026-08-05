@@ -59,12 +59,24 @@ async function porTelegram(texto) {
   const token = process.env.TELEGRAM_BOT_TOKEN || "";
   const chat = process.env.TELEGRAM_CHAT_ID || "";
   if (!token || !chat) return null;
-  const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chat, text: texto, parse_mode: "Markdown" }),
-  });
-  if (!r.ok) throw new Error(`Telegram ${r.status}: ${(await r.text()).slice(0, 120)}`);
+
+  const enviar = (cuerpo) =>
+    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cuerpo),
+    });
+
+  // Primero con negritas. Si el nombre o la dirección del cliente traen caracteres
+  // que rompen el formato (_ * [ `), Telegram rechaza el mensaje entero: en ese caso
+  // se reenvía como texto plano. Un pedido no se puede perder por un guion bajo.
+  let r = await enviar({ chat_id: chat, text: texto, parse_mode: "Markdown" });
+  if (!r.ok) {
+    const detalle = (await r.text()).slice(0, 200);
+    r = await enviar({ chat_id: chat, text: texto });
+    if (!r.ok) throw new Error(`Telegram ${r.status}: ${(await r.text()).slice(0, 120)}`);
+    console.warn("Telegram rechazó el formato, se envió sin negritas:", detalle);
+  }
   return "telegram";
 }
 
