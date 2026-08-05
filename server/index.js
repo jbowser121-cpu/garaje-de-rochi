@@ -150,6 +150,7 @@ app.post("/api/pedidos", async (req, res) => {
         cliente: {
           nombre: cliente?.nombre,
           celular: cliente?.telefono,
+          cedula: cliente?.cedula,
           direccion: cliente?.direccion,
           ciudad: cliente?.ciudad,
         },

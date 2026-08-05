@@ -518,6 +518,7 @@ async function enviarPedido(e) {
     cliente: {
       nombre: fd.get("nombre"),
       telefono: fd.get("telefono"),
+      cedula: fd.get("cedula"),
       direccion: fd.get("direccion"),
       ciudad: fd.get("ciudad"),
     },
@@ -557,10 +558,12 @@ async function enviarPedido(e) {
     `Envío: ${envioTxt}\n` +
     `*TOTAL A PAGAR: ${money(data.total)}*\n\n` +
     `💳 *Forma de pago:* ${formaPago}\n\n` +
-    `*Datos de entrega:*\n` +
-    `👤 ${c.nombre || "-"}\n` +
-    `📱 ${c.telefono || "-"}\n` +
-    `📍 ${c.direccion || "-"}, ${c.ciudad || "-"}\n` +
+    `🌿 *Datos cliente:*\n` +
+    `Nombre y apellido: ${c.nombre || "-"}\n` +
+    `Celular: ${c.telefono || "-"}\n` +
+    `Cédula: ${c.cedula || "-"}\n` +
+    `Dirección de envío: ${c.direccion || "-"}\n` +
+    `Departamento y ciudad: ${c.ciudad || "-"}\n` +
     `🚚 Zona: ${data.region || "-"}\n\n` +
     `🌐 Tienda: ${state.publicUrl}\n` +
     `Quiero coordinar el pago y la entrega. ¡Gracias!`;

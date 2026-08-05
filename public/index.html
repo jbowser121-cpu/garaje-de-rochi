@@ -90,10 +90,11 @@
           <button id="cerrarCheckout" class="icon-btn" aria-label="Cerrar">✕</button>
         </div>
         <form id="checkoutForm" class="form">
-          <label>Nombre completo<input name="nombre" required /></label>
-          <label>Teléfono / WhatsApp<input name="telefono" required /></label>
-          <label>Dirección<input name="direccion" required /></label>
-          <label>Ciudad<input name="ciudad" required /></label>
+          <label>Nombre y apellido<input name="nombre" required /></label>
+          <label>Celular / WhatsApp<input name="telefono" required inputmode="tel" /></label>
+          <label>Cédula<input name="cedula" inputmode="numeric" /></label>
+          <label>Dirección de envío <small>(especifica si reclamas en oficina)</small><input name="direccion" required /></label>
+          <label>Departamento y ciudad<input name="ciudad" required /></label>
           <label>Región de envío
             <select name="region" id="regionSelect" required></select>
           </label>

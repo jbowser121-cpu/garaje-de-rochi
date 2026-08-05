@@ -17,30 +17,44 @@ export function mensajePedido({ titulo, items, subtotal, total, envio, pago, cli
     (i) => `• ${i.cantidad} x ${i.nombre}${i.opcion ? ` (${i.opcion})` : ""} = ${cop(i.precio * i.cantidad)}`
   );
 
+  // Si un dato no llegó se dice explícitamente, para que se note al despachar.
+  const falta = "⚠️ NO INFORMÓ";
+
+  // El formulario puede tener casillas propias de cada forma de envío. Se muestran
+  // todas menos las que ya salen arriba con su etiqueta.
+  const yaMostrados = /nombre|celular|c[ée]dula|direcci|ciudad|departamento/i;
+  const otrosDatos = (cliente?.extras || [])
+    .filter((x) => x && x.valor && !yaMostrados.test(x.etiqueta || ""))
+    .map((x) => `${x.etiqueta}: ${x.valor}`);
+
+  // `null` = línea que no aplica y se quita. `""` = renglón en blanco a propósito,
+  // para que el mensaje se lea por bloques en el celular.
   return [
     `🛒 *${titulo}*`,
     "",
     "*Productos:*",
     ...(lineas.length ? lineas : ["(sin detalle de productos)"]),
     "",
-    subtotal ? `Subtotal: ${cop(subtotal)}` : "",
+    subtotal ? `Subtotal: ${cop(subtotal)}` : null,
     `*TOTAL: ${cop(total)}*`,
-    envio ? `🚚 Entrega: ${envio}` : "",
-    pago ? `💳 Pago: ${pago}` : "",
-    estado ? `📌 Estado: ${estado}` : "",
+    envio ? `🚚 Entrega: ${envio}` : null,
+    pago ? `💳 Pago: ${pago}` : null,
+    estado ? `📌 Estado: ${estado}` : null,
     "",
-    "*A NOMBRE DE / DÓNDE ENVIAR:*",
-    `👤 ${cliente?.nombre || "(no informó)"}`,
-    `📱 ${cliente?.celular || "(no informó)"}`,
-    cliente?.cedula ? `🪪 Cédula: ${cliente.cedula}` : "",
-    `📍 ${cliente?.direccion || "(no informó)"}`,
-    cliente?.ciudad ? `🏙️ ${cliente.ciudad}` : "",
+    "🩷 *DATOS CLIENTE* 🩷",
+    `Nombre y apellido: ${cliente?.nombre || falta}`,
+    `Celular: ${cliente?.celular || falta}`,
+    `Cédula: ${cliente?.cedula || falta}`,
+    `Dirección de envío: ${cliente?.direccion || falta}`,
+    `Departamento y ciudad: ${cliente?.ciudad || falta}`,
+    // Cualquier otra casilla que haya llenado y que no sea de las de arriba.
+    ...otrosDatos,
     "",
-    referencia ? `Referencia: ${referencia}` : "",
-    transaccion ? `Transacción Wompi: ${transaccion}` : "",
+    referencia ? `Referencia: ${referencia}` : null,
+    transaccion ? `Transacción Wompi: ${transaccion}` : null,
     `🕒 ${new Date().toLocaleString("es-CO")}`,
   ]
-    .filter((l) => l !== "")
+    .filter((l) => l !== null)
     .join("\n");
 }
 
