@@ -1,6 +1,6 @@
 // Precios y visibilidad de El Garaje de Rochi.
 // Se genera desde inventario.xlsx — no lo edites a mano.
-// Última actualización: 4/8/2026, 5:22:36 p. m.
+// Última actualización: 11/8/2026, 2:05:54 p. m.
 
 export const ajustes = {
   "VM-MAGCIT-180": { precio: 170000, oculto: false },
@@ -30,4 +30,5 @@ export const ajustes = {
   "VM-VITD3-650": { precio: 140000, oculto: false },
   "VM-SELENIO-240": { precio: 160000, oculto: false },
   "CP-MINOXIDIL": { precio: 60000, oculto: false },
+  "SUP-GLUCO-280": { precio: 160000, oculto: false },
 };

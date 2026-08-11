@@ -1,5 +1,6 @@
-// Inventario de El Garaje de Rochi. Se genera automáticamente desde el Excel.
-// No lo edites a mano: cambia las cantidades en 'Inventario El Garaje de Rochi.xlsx'.
+// Inventario de El Garaje de Rochi (cantidades en existencia).
+// Se genera desde inventario.xlsx — no lo edites a mano.
+// Última actualización: 11/8/2026, 2:05:54 p. m.
 
 export const inventario = {
   "VM-MAGCIT-180": 0,
