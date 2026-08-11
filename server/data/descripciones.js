@@ -136,4 +136,9 @@ export const descripcionesProductos = {
     paraQue: "• Ayuda a regenerar el cabello.\n• Reactiva los folículos capilares.\n• Ideal para zonas con pérdida de cabello.\n• Solución tópica al 5%.",
     modoUso: "Aplicar 1 mL en el cuero cabelludo seco, 2 veces al día. ⚠️ Solo para hombres — no usar en mujeres.",
   },
+  "SUP-GLUCO-280": {
+    descripcion: "Glucosamina y Condroitina de Kirkland Signature, la combinación clásica para cuidar tus articulaciones. Frasco rendidor de 280 tabletas, ideal para quienes buscan movilidad y bienestar articular.",
+    paraQue: "• Apoya la salud de las articulaciones.\n• Ayuda a mantener el cartílago.\n• Favorece la movilidad y flexibilidad.\n• Ideal para deportistas y adultos mayores.",
+    modoUso: "Tomar 2 tabletas al día con alimentos, o según indicación profesional.",
+  },
 };

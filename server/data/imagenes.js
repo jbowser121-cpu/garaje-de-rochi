@@ -29,4 +29,5 @@ export const imagenesProductos = {
   "VM-VITD3-650": { imagen: "/fotos/VM-VITD3-650/1.png", imagenes: ["/fotos/VM-VITD3-650/1.png", "/fotos/VM-VITD3-650/2.png", "/fotos/VM-VITD3-650/3.png"] },
   "VM-SELENIO-240": { imagen: "/fotos/VM-SELENIO-240/1.png", imagenes: ["/fotos/VM-SELENIO-240/1.png", "/fotos/VM-SELENIO-240/2.png", "/fotos/VM-SELENIO-240/3.png"] },
   "CP-MINOXIDIL": { imagen: "/fotos/CP-MINOXIDIL/1.png", imagenes: ["/fotos/CP-MINOXIDIL/1.png"] },
+  "SUP-GLUCO-280": { imagen: "/fotos/SUP-GLUCO-280/1.png", imagenes: ["/fotos/SUP-GLUCO-280/1.png", "/fotos/SUP-GLUCO-280/2.png", "/fotos/SUP-GLUCO-280/3.png"] },
 };

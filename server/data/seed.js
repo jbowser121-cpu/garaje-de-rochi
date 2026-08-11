@@ -310,6 +310,17 @@ export const productos = [
     descripcion: "Kirkland Minoxidil 5% (Extra Strength), tratamiento tópico para el crecimiento del cabello en hombres. Precio por tubo de 60 mL.",
     destacado: false,
   },
+  {
+    sku: "SUP-GLUCO-280",
+    nombre: "Kirkland Glucosamina y Condroitina (280 tabletas)",
+    categoria: "suplementos",
+    marca: "Kirkland Signature",
+    precio: 160000,
+    stock: 20,
+    color: "#3b7a57",
+    descripcion: "Glucosamina y condroitina de Kirkland Signature. Apoya la salud de las articulaciones y el cartílago. 280 tabletas.",
+    destacado: false,
+  },
 ];
 
 // Aplica las fotos (imagen + galería) a cada producto por SKU.
