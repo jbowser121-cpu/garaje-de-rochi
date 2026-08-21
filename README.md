@@ -104,7 +104,8 @@ clode/
 
 ## 7. Próximos pasos sugeridos
 
-- 💳 **Pasarela de pago** (Wompi, Mercado Pago, PayU) en el checkout.
+- 💳 Pasarela de pago: se integró Wompi pero está **desactivada a propósito** (ver `WOMPI.md`);
+  toda compra se cierra por WhatsApp para no pagar comisión.
 - 🖼️ Reemplazar los placeholders de color por **fotos reales** de producto.
 - 🔐 **Panel de administración** para editar stock y ver pedidos.
 - 🧠 Conectar el cerebro del bot a **Claude** para respuestas más naturales (ver comentario final en `bots/brain.js`).

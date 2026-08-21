@@ -1,5 +1,26 @@
 # Activar pago con tarjeta / PSE (Wompi)
 
+> ## ⛔ HOY ESTÁ DESACTIVADO
+>
+> La tienda ya **no** cobra en línea. Toda compra se cierra por **WhatsApp**: el cliente llena
+> sus datos, escoge *contra entrega* o *transferencia*, y al confirmar se abre tu WhatsApp con
+> el pedido completo. Si escoge transferencia, tú le pasas ahí el número de cuenta. Así no se
+> paga la comisión de la pasarela.
+>
+> **Para volver a activarlo** (todo el código del servidor sigue en su sitio):
+>
+> 1. En `public/index.html`, dentro de `#checkoutForm`, volver a poner el bloque justo después
+>    del `#resumenCheckout`:
+>    `<div id="pagoOnline" class="pago-online" hidden><button type="button" class="btn btn--pay btn--block" id="pagarWompi">💳 Pagar en línea (PSE / Tarjeta)</button><p class="pago-online__nota">Pago seguro procesado por Wompi 🔒</p><div class="pago-sep"><span>o</span></div></div>`
+> 2. En `public/app.js`, volver a poner la función `pagarEnLinea()`, su línea en `bindEvents()`
+>    (`$("#pagarWompi").addEventListener("click", pagarEnLinea);`), el `state.pago` y la línea
+>    de `#pagoOnline` en `abrirCheckout()`. Está todo en el commit que lo quitó (`git show`).
+> 3. Las llaves `WOMPI_PUBLIC_KEY` y `WOMPI_INTEGRITY_SECRET` siguen puestas en Vercel.
+>
+> Lo que sigue abajo es la guía original, por si se reactiva.
+
+---
+
 El código ya está listo. Solo faltan tus llaves de Wompi. Sigue estos pasos.
 
 ## PASO 1 — Crear la cuenta de comercio (una vez)

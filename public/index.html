@@ -101,18 +101,12 @@
           <label>Forma de pago
             <select name="formaPago" id="formaPago" required>
               <option value="Pago contra entrega">Pago contra entrega (pagas al recibir)</option>
-              <option value="Transferencia (Nequi / Daviplata / Bancolombia)">Transferencia (Nequi / Daviplata / Bancolombia)</option>
+              <option value="Transferencia (te pasamos la cuenta por WhatsApp)">Transferencia (te pasamos la cuenta por WhatsApp)</option>
             </select>
           </label>
           <div class="resumen" id="resumenCheckout"></div>
-          <div id="pagoOnline" class="pago-online" hidden>
-            <button type="button" class="btn btn--pay btn--block" id="pagarWompi">
-              💳 Pagar en línea (PSE / Tarjeta)
-            </button>
-            <p class="pago-online__nota">Pago seguro procesado por Wompi 🔒</p>
-            <div class="pago-sep"><span>o</span></div>
-          </div>
           <button type="submit" class="btn btn--primary btn--block">Confirmar pedido por WhatsApp</button>
+          <p class="pago-online__nota">Al confirmar se abre WhatsApp con tu pedido y ahí coordinamos el pago y la entrega.</p>
         </form>
       </div>
     </div>

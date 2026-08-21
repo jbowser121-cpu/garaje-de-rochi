@@ -9,11 +9,12 @@ lo manda **el servidor**, no el navegador del cliente.
 | Momento | Qué te llega | ¿Depende del cliente? |
 |---|---|---|
 | El cliente confirma el pedido | Productos, total, entrega, nombre, celular, cédula, dirección y ciudad | **No** |
-| Wompi aprueba el pago | PAGO APROBADO con monto, medio de pago, referencia y de nuevo la dirección | **No** — Wompi le habla directo al servidor |
-| El cliente presiona el botón verde | El mismo resumen a tu WhatsApp | Sí (queda como tercer respaldo) |
+| El cliente presiona el botón verde | El mismo resumen a tu WhatsApp | Sí (queda como segundo respaldo) |
 
-O sea: te llega **dos veces** en los pagos en línea (uno al confirmar y otro al aprobarse
-el pago). Es a propósito: mejor repetido que perdido.
+> El pago en línea con Wompi está desactivado (ver `WOMPI.md`), así que ya no hay aviso de
+> "PAGO APROBADO": el pago se acuerda contigo por WhatsApp (contra entrega o transferencia)
+> y tú lo confirmas. El **PASO 2** de más abajo (webhook de Wompi) solo aplica si algún día
+> se vuelve a activar.
 
 **Y si todos los canales fallan**, el pedido igual queda escrito en los registros del
 servidor: Vercel → tu proyecto → pestaña **Logs**. Nunca se pierde.

@@ -26,6 +26,8 @@ function requireAdmin(req, res, next) {
 }
 
 // Configuración de pago (Wompi). Las llaves se ponen en .env; el secreto NUNCA se expone.
+// OJO: el pago en línea está DESACTIVADO en la tienda — el frontend ya no ofrece el botón
+// y toda compra se cierra por WhatsApp. Esto se deja por si se reactiva (ver WOMPI.md).
 const WOMPI_PUBLIC_KEY = process.env.WOMPI_PUBLIC_KEY || "";
 const WOMPI_INTEGRITY_SECRET = process.env.WOMPI_INTEGRITY_SECRET || "";
 

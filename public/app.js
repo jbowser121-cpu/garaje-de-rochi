@@ -1,4 +1,6 @@
 // Lógica de la tienda: catálogo, filtros, búsqueda, carrito y checkout.
+// El pago en línea (Wompi) está DESACTIVADO: toda compra se cierra por WhatsApp, y ahí se
+// acuerda contra entrega o transferencia, para no pagar comisión de pasarela.
 const money = (n) =>
   new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n);
 
@@ -6,7 +8,6 @@ const state = {
   tienda: null,
   categorias: [],
   envios: null,
-  pago: { habilitado: false, wompiPublicKey: "" },
   productos: [],
   categoriaActiva: null,
   busqueda: "",
@@ -21,7 +22,6 @@ async function init() {
   state.tienda = info.tienda;
   state.categorias = info.categorias;
   state.envios = info.envios;
-  state.pago = info.pago || { habilitado: false };
   state.publicUrl = info.publicUrl || window.location.origin;
 
   document.title = `${info.tienda.nombre} — Vitaminas y Suplementos`;
@@ -56,7 +56,7 @@ function renderTicker() {
     `🚚 Envíos a <b>todo Colombia</b>`,
     `📱 Pedidos por WhatsApp: <b>${c.telefono || "+57 314 450 3681"}</b>`,
     `📸 Síguenos en Instagram: <b>${t.instagram || "@elgarajederochi"}</b>`,
-    `💳 Paga con tarjeta, PSE o contra entrega`,
+    `💳 Paga contra entrega o por transferencia`,
     `🌿 Vitaminas y suplementos <b>originales</b>`,
   ];
   const linea = items.map((i) => `<span>${i}</span>`).join("<span>•</span>");
@@ -339,9 +339,8 @@ function textoEnvios() {
 // Texto de métodos de pago.
 function textoPagos() {
   const lineas = [];
-  if (state.pago?.habilitado) lineas.push("💳 Tarjeta débito o crédito y PSE (pago seguro con Wompi).");
   lineas.push("🏪 Pago contra entrega (pagas al recibir).");
-  lineas.push("💸 Transferencia: Nequi, Daviplata o Bancolombia.");
+  lineas.push("💸 Transferencia (Nequi, Daviplata o Bancolombia): te pasamos los datos de la cuenta por WhatsApp.");
   return lineas.join("\n");
 }
 
@@ -484,8 +483,6 @@ async function abrirCheckout() {
   await actualizarResumenCheckout();
   // Prefill con los datos del cliente si tiene sesión
   if (state.cliente?.nombre) $('#checkoutForm [name="nombre"]').value = state.cliente.nombre;
-  // Muestra el botón de pago en línea solo si Wompi está configurado
-  $("#pagoOnline").hidden = !state.pago.habilitado;
   $("#checkoutModal").classList.add("open");
   $("#checkoutModal").setAttribute("aria-hidden", "false");
 }
@@ -642,45 +639,9 @@ async function enviarAuth(e) {
   cerrarAuth();
 }
 
-// ---------- Pago en línea (Wompi) ----------
-async function pagarEnLinea() {
-  const items = Object.entries(state.cart).map(([sku, cantidad]) => ({ sku, cantidad }));
-  if (!items.length) { alert("Tu carrito está vacío."); return; }
-
-  // Exige los datos de entrega (para saber a dónde despachar).
-  const form = $("#checkoutForm");
-  if (!form.reportValidity()) return;
-  const fd = new FormData(form);
-  const region = fd.get("region");
-
-  const res = await fetch("/api/pago/preparar", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items, region }),
-  });
-  const data = await res.json();
-  if (!res.ok) { alert(data.error || "No se pudo iniciar el pago."); return; }
-
-  // Redirige al Checkout seguro de Wompi (procesa PSE y tarjetas), enviando
-  // los datos del cliente y la dirección de entrega para que queden con el pago.
-  const url = new URL("https://checkout.wompi.co/p/");
-  url.searchParams.set("public-key", data.publicKey);
-  url.searchParams.set("currency", data.currency);
-  url.searchParams.set("amount-in-cents", data.amountInCents);
-  url.searchParams.set("reference", data.reference);
-  url.searchParams.set("signature:integrity", data.signature);
-  url.searchParams.set("redirect-url", state.publicUrl || window.location.origin);
-  url.searchParams.set("customer-data:full-name", fd.get("nombre") || "");
-  url.searchParams.set("customer-data:phone-number", fd.get("telefono") || "");
-  if (state.cliente?.email) url.searchParams.set("customer-data:email", state.cliente.email);
-  url.searchParams.set("shipping-address:address-line-1", fd.get("direccion") || "");
-  url.searchParams.set("shipping-address:city", fd.get("ciudad") || "");
-  url.searchParams.set("shipping-address:region", region || "");
-  url.searchParams.set("shipping-address:name", fd.get("nombre") || "");
-  url.searchParams.set("shipping-address:phone-number", fd.get("telefono") || "");
-  url.searchParams.set("shipping-address:country", "CO");
-  window.location.href = url.toString();
-}
+// El pago en línea (Wompi) se quitó: toda compra se cierra por WhatsApp para no pagar
+// comisión de pasarela. El código del servidor (/api/pago/preparar y el webhook) sigue ahí
+// por si algún día se reactiva — ver WOMPI.md.
 
 // ---------- UI ----------
 function openCart() {
@@ -702,7 +663,6 @@ function bindEvents() {
   $("#cerrarOk").addEventListener("click", () => $("#okModal").classList.remove("open"));
   $("#checkoutForm").addEventListener("submit", enviarPedido);
   $("#regionSelect").addEventListener("change", actualizarResumenCheckout);
-  $("#pagarWompi").addEventListener("click", pagarEnLinea);
 
   // Detalle de producto
   $("#cerrarProducto").addEventListener("click", cerrarProducto);
