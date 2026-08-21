@@ -133,6 +133,17 @@ app.post("/api/pago/preparar", (req, res) => {
 app.post("/api/pedidos", async (req, res) => {
   try {
     const { items, cliente, region, formaPago } = req.body || {};
+
+    // El contra entrega solo existe en Granada, Meta. Si llega pedido de otra zona con
+    // esa forma de pago (navegador viejo o petición armada a mano), se rechaza: es mejor
+    // que el cliente lo corrija ahora y no que llegue un pedido que no se puede cumplir.
+    const esContraEntrega = /contra entrega/i.test(formaPago || "");
+    if (esContraEntrega && !/granada/i.test(region || "")) {
+      return res.status(400).json({
+        error: "El pago contra entrega solo está disponible en Granada, Meta. Para el resto del país escoge transferencia.",
+      });
+    }
+
     const pedido = db.crearPedido({ items, cliente, region });
     res.status(201).json(pedido);
 
@@ -147,7 +158,7 @@ app.post("/api/pedidos", async (req, res) => {
         envio: pedido.envio?.gratis
           ? `GRATIS (${pedido.envio.region || region})`
           : `$ ${Number(pedido.envio?.valor || 0).toLocaleString("es-CO")} — ${pedido.envio?.region || region}`,
-        pago: formaPago || "Pago contra entrega",
+        pago: formaPago || "Por acordar por WhatsApp",
         estado: "Pendiente de confirmar el pago",
         cliente: {
           nombre: cliente?.nombre,

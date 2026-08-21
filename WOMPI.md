@@ -3,7 +3,8 @@
 > ## ⛔ HOY ESTÁ DESACTIVADO
 >
 > La tienda ya **no** cobra en línea. Toda compra se cierra por **WhatsApp**: el cliente llena
-> sus datos, escoge *contra entrega* o *transferencia*, y al confirmar se abre tu WhatsApp con
+> sus datos, escoge *contra entrega* (**solo en Granada, Meta**) o *transferencia* (el resto del
+> país), y al confirmar se abre tu WhatsApp con
 > el pedido completo. Si escoge transferencia, tú le pasas ahí el número de cuenta. Así no se
 > paga la comisión de la pasarela.
 >

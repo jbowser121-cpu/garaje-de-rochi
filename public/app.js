@@ -56,7 +56,7 @@ function renderTicker() {
     `🚚 Envíos a <b>todo Colombia</b>`,
     `📱 Pedidos por WhatsApp: <b>${c.telefono || "+57 314 450 3681"}</b>`,
     `📸 Síguenos en Instagram: <b>${t.instagram || "@elgarajederochi"}</b>`,
-    `💳 Paga contra entrega o por transferencia`,
+    `💳 Contra entrega <b>solo en Granada, Meta</b> · resto del país por transferencia`,
     `🌿 Vitaminas y suplementos <b>originales</b>`,
   ];
   const linea = items.map((i) => `<span>${i}</span>`).join("<span>•</span>");
@@ -339,8 +339,8 @@ function textoEnvios() {
 // Texto de métodos de pago.
 function textoPagos() {
   const lineas = [];
-  lineas.push("🏪 Pago contra entrega (pagas al recibir).");
-  lineas.push("💸 Transferencia (Nequi, Daviplata o Bancolombia): te pasamos los datos de la cuenta por WhatsApp.");
+  lineas.push("🛵 Pago contra entrega (pagas al recibir): SOLO en Granada, Meta.");
+  lineas.push("💸 Transferencia (Nequi, Daviplata o Bancolombia): te pasamos los datos de la cuenta por WhatsApp. Es la forma de pago para envíos al resto del país.");
   return lineas.join("\n");
 }
 
@@ -483,8 +483,35 @@ async function abrirCheckout() {
   await actualizarResumenCheckout();
   // Prefill con los datos del cliente si tiene sesión
   if (state.cliente?.nombre) $('#checkoutForm [name="nombre"]').value = state.cliente.nombre;
+  ajustarFormasDePago();
   $("#checkoutModal").classList.add("open");
   $("#checkoutModal").setAttribute("aria-hidden", "false");
+}
+
+// El contra entrega SOLO se ofrece en Granada, Meta (es donde la tienda entrega en mano).
+// Para el resto del país queda únicamente transferencia.
+const esGranada = (region) => /granada/i.test(region || "");
+
+function ajustarFormasDePago() {
+  const region = $("#regionSelect").value;
+  const select = $("#formaPago");
+  const contraEntrega = [...select.options].find((o) => /contra entrega/i.test(o.value));
+  if (!contraEntrega) return;
+
+  const disponible = esGranada(region);
+  contraEntrega.disabled = !disponible;
+  contraEntrega.hidden = !disponible;
+  contraEntrega.textContent = disponible
+    ? "Pago contra entrega (pagas al recibir)"
+    : "Pago contra entrega (solo en Granada, Meta)";
+
+  // Si venía escogido y ya no aplica, se pasa a transferencia para no mandar un pedido imposible.
+  if (!disponible && /contra entrega/i.test(select.value)) {
+    const otra = [...select.options].find((o) => !o.disabled);
+    if (otra) select.value = otra.value;
+  }
+
+  $("#notaContraEntrega").hidden = disponible;
 }
 
 async function actualizarResumenCheckout() {
@@ -511,7 +538,7 @@ async function enviarPedido(e) {
   const payload = {
     items,
     region: fd.get("region"),
-    formaPago: fd.get("formaPago") || "Pago contra entrega",
+    formaPago: fd.get("formaPago") || "Por acordar por WhatsApp",
     cliente: {
       nombre: fd.get("nombre"),
       telefono: fd.get("telefono"),
@@ -547,7 +574,7 @@ async function enviarPedido(e) {
   const envioTxt = data.envio.gratis
     ? (/(granada)/i.test(data.envio.region || "") ? "GRATIS (domicilio en Granada, Meta) 🛵" : "GRATIS 🎉")
     : `${money(data.envio.valor)} (${data.envio.region})`;
-  const formaPago = fd.get("formaPago") || "Pago contra entrega";
+  const formaPago = fd.get("formaPago") || "Por acordar por WhatsApp";
   const mensaje =
     `🛒 *NUEVO PEDIDO #${data.numero}* — ${state.tienda.nombre}\n\n` +
     `*Productos:*\n${lineasProductos}\n\n` +
@@ -662,7 +689,7 @@ function bindEvents() {
   $("#cerrarCheckout").addEventListener("click", () => $("#checkoutModal").classList.remove("open"));
   $("#cerrarOk").addEventListener("click", () => $("#okModal").classList.remove("open"));
   $("#checkoutForm").addEventListener("submit", enviarPedido);
-  $("#regionSelect").addEventListener("change", actualizarResumenCheckout);
+  $("#regionSelect").addEventListener("change", () => { actualizarResumenCheckout(); ajustarFormasDePago(); });
 
   // Detalle de producto
   $("#cerrarProducto").addEventListener("click", cerrarProducto);

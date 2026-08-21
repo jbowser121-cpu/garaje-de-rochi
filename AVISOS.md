@@ -12,7 +12,8 @@ lo manda **el servidor**, no el navegador del cliente.
 | El cliente presiona el botón verde | El mismo resumen a tu WhatsApp | Sí (queda como segundo respaldo) |
 
 > El pago en línea con Wompi está desactivado (ver `WOMPI.md`), así que ya no hay aviso de
-> "PAGO APROBADO": el pago se acuerda contigo por WhatsApp (contra entrega o transferencia)
+> "PAGO APROBADO": el pago se acuerda contigo por WhatsApp (contra entrega solo en Granada,
+> Meta; transferencia para el resto del país)
 > y tú lo confirmas. El **PASO 2** de más abajo (webhook de Wompi) solo aplica si algún día
 > se vuelve a activar.
 
