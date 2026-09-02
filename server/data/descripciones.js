@@ -27,7 +27,7 @@ export const descripcionesProductos = {
     modoUso: "Tomar 1 tableta al día con agua y alimentos.",
   },
   "VM-VITC-500": {
-    descripcion: "Vitamina C de 1000 mg de Kirkland Signature, presentación rendidora de 500 tabletas. Un clásico para el sistema inmune de toda la familia.",
+    descripcion: "Vitamina C masticable de 500 mg de Kirkland Signature, sabor naranja, presentación rendidora de 500 tabletas. Un clásico para el sistema inmune de toda la familia.",
     paraQue: "• Refuerza las defensas del cuerpo.\n• Antioxidante natural.\n• Apoya la piel y el colágeno.\n• Rinde muchísimo.",
     modoUso: "Tomar 1 tableta al día con alimentos.",
   },

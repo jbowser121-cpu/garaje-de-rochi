@@ -7,7 +7,7 @@ export const imagenesProductos = {
   "CP-HSN-ADV-230": { imagen: "/fotos/CP-HSN-ADV-230/1.png", imagenes: ["/fotos/CP-HSN-ADV-230/1.png", "/fotos/CP-HSN-ADV-230/2.png", "/fotos/CP-HSN-ADV-230/3.png"] },
   "VM-SUPERB-500": { imagen: "/fotos/VM-SUPERB-500/1.png", imagenes: ["/fotos/VM-SUPERB-500/1.png", "/fotos/VM-SUPERB-500/2.png", "/fotos/VM-SUPERB-500/3.png"] },
   "VM-VITC-XS-365": { imagen: "/fotos/VM-VITC-XS-365/1.png", imagenes: ["/fotos/VM-VITC-XS-365/1.png", "/fotos/VM-VITC-XS-365/2.png", "/fotos/VM-VITC-XS-365/3.png"] },
-  "VM-VITC-500": { imagen: "/fotos/VM-VITC-500/1.png", imagenes: ["/fotos/VM-VITC-500/1.png", "/fotos/VM-VITC-500/2.png"] },
+  "VM-VITC-500": { imagen: "/fotos/VM-VITC-500/1.png", imagenes: ["/fotos/VM-VITC-500/1.png", "/fotos/VM-VITC-500/2.png", "/fotos/VM-VITC-500/3.png"] },
   "CP-HSN-250": { imagen: "/fotos/CP-HSN-250/1.png", imagenes: ["/fotos/CP-HSN-250/1.png", "/fotos/CP-HSN-250/2.png", "/fotos/CP-HSN-250/3.png"] },
   "SUP-FATBURN-130": { imagen: "/fotos/SUP-FATBURN-130/1.png", imagenes: ["/fotos/SUP-FATBURN-130/1.png", "/fotos/SUP-FATBURN-130/2.png", "/fotos/SUP-FATBURN-130/3.png"] },
   "SUP-ASHGUM-180": { imagen: "/fotos/SUP-ASHGUM-180/1.png", imagenes: ["/fotos/SUP-ASHGUM-180/1.png", "/fotos/SUP-ASHGUM-180/2.png", "/fotos/SUP-ASHGUM-180/3.png"] },

@@ -5,7 +5,7 @@
 export const ajustes = {
   "VM-MAGCIT-180": { precio: 170000, oculto: false },
   "VM-MAGGLY-180": { precio: 130000, oculto: false },
-  "CP-HSN-ADV-230": { precio: 120000, oculto: false },
+  "CP-HSN-ADV-230": { precio: 130000, oculto: false },
   "VM-SUPERB-500": { precio: 130000, oculto: false },
   "VM-VITC-XS-365": { precio: 160000, oculto: false },
   "VM-VITC-500": { precio: 130000, oculto: false },

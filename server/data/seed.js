@@ -70,13 +70,13 @@ export const productos = [
   },
   {
     sku: "VM-VITC-500",
-    nombre: "Kirkland Vitamina C 1000 mg (500 tabletas)",
+    nombre: "Kirkland Vitamina C Masticable 500 mg (500 tabletas)",
     categoria: "vitaminas-minerales",
     marca: "Kirkland Signature",
     precio: 130000,
     stock: 20,
     color: "#e59422",
-    descripcion: "Vitamina C 1000 mg. Antioxidante y apoyo inmune. 500 tabletas.",
+    descripcion: "Vitamina C masticable 500 mg, sabor naranja. Antioxidante y apoyo inmune. 500 tabletas.",
     destacado: false,
   },
   {
