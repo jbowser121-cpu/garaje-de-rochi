@@ -1,6 +1,6 @@
 // Precios y visibilidad de El Garaje de Rochi.
 // Se genera desde inventario.xlsx — no lo edites a mano.
-// Última actualización: 13/9/2026, 10:23:25 a. m.
+// Última actualización: 14/9/2026, 8:28:36 p. m.
 
 export const ajustes = {
   "VM-MAGCIT-180": { precio: 170000, oculto: false },
