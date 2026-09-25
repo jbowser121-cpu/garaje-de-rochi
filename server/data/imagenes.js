@@ -30,4 +30,5 @@ export const imagenesProductos = {
   "VM-SELENIO-240": { imagen: "/fotos/VM-SELENIO-240/1.png", imagenes: ["/fotos/VM-SELENIO-240/1.png", "/fotos/VM-SELENIO-240/2.png", "/fotos/VM-SELENIO-240/3.png"] },
   "CP-MINOXIDIL": { imagen: "/fotos/CP-MINOXIDIL/1.png", imagenes: ["/fotos/CP-MINOXIDIL/1.png"] },
   "SUP-GLUCO-280": { imagen: "/fotos/SUP-GLUCO-280/1.png", imagenes: ["/fotos/SUP-GLUCO-280/1.png", "/fotos/SUP-GLUCO-280/2.png", "/fotos/SUP-GLUCO-280/3.png"] },
+  "SUP-COQ10-140": { imagen: "/fotos/SUP-COQ10-140/1.png", imagenes: ["/fotos/SUP-COQ10-140/1.png", "/fotos/SUP-COQ10-140/2.png"] },
 };

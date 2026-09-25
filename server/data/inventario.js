@@ -31,4 +31,5 @@ export const inventario = {
   "VM-SELENIO-240": 2,
   "CP-MINOXIDIL": 10,
   "SUP-GLUCO-280": 1,
+  "SUP-COQ10-140": 1,
 };

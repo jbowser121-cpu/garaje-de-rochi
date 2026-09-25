@@ -141,4 +141,9 @@ export const descripcionesProductos = {
     paraQue: "• Apoya la salud de las articulaciones.\n• Ayuda a mantener el cartílago.\n• Favorece la movilidad y flexibilidad.\n• Ideal para deportistas y adultos mayores.",
     modoUso: "Tomar 2 tabletas al día con alimentos, o según indicación profesional.",
   },
+  "SUP-COQ10-140": {
+    descripcion: "Coenzima Q10 (CoQ10) de Nature Made, 200 mg por cápsula blanda. Un antioxidante potente que apoya la salud del corazón y la producción de energía en las células. Frasco de 140 softgels.",
+    paraQue: "• Apoya la salud del corazón.\n• Antioxidante que combate los radicales libres.\n• Ayuda a la producción de energía celular.\n• Marca #1 recomendada por farmacéuticos.",
+    modoUso: "Tomar 1 cápsula blanda al día con alimentos, o según indicación profesional.",
+  },
 };

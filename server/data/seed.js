@@ -321,6 +321,17 @@ export const productos = [
     descripcion: "Glucosamina y condroitina de Kirkland Signature. Apoya la salud de las articulaciones y el cartílago. 280 tabletas.",
     destacado: false,
   },
+  {
+    sku: "SUP-COQ10-140",
+    nombre: "Nature Made CoQ10 200 mg (140 softgels)",
+    categoria: "suplementos",
+    marca: "Nature Made",
+    precio: 260000,
+    stock: 1,
+    color: "#c99700",
+    descripcion: "Coenzima Q10 (CoQ10) de Nature Made, 200 mg. Antioxidante que apoya la salud del corazón y la energía celular. 140 cápsulas blandas.",
+    destacado: false,
+  },
 ];
 
 // Aplica las fotos (imagen + galería) a cada producto por SKU.

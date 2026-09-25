@@ -31,4 +31,5 @@ export const ajustes = {
   "VM-SELENIO-240": { precio: 160000, oculto: false },
   "CP-MINOXIDIL": { precio: 60000, oculto: false },
   "SUP-GLUCO-280": { precio: 160000, oculto: false },
+  "SUP-COQ10-140": { precio: 260000, oculto: false },
 };
