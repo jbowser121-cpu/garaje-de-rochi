@@ -1,6 +1,6 @@
 // Inventario de El Garaje de Rochi (cantidades en existencia).
 // Se genera desde inventario.xlsx — no lo edites a mano.
-// Última actualización: 29/10/2026, 9:47:12 a. m.
+// Última actualización: 29/10/2026, 10:59:26 a. m.
 
 export const inventario = {
   "SUP-GINSENG-120": 2,
@@ -17,7 +17,7 @@ export const inventario = {
   "SUP-MELA-250": 3,
   "SUP-COQ10-140": 1,
   "VM-MAGCIT-180": 2,
-  "VM-MAGGUM-90": 0,
+  "VM-MAGGUM-90": 2,
   "VM-PRENATAL-150": 1,
   "VM-VITC-XS-365": 2,
   "VM-VITD3-650": 1,
