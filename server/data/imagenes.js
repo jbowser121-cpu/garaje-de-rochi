@@ -31,4 +31,6 @@ export const imagenesProductos = {
   "CP-MINOXIDIL": { imagen: "/fotos/CP-MINOXIDIL/1.png", imagenes: ["/fotos/CP-MINOXIDIL/1.png"] },
   "SUP-GLUCO-280": { imagen: "/fotos/SUP-GLUCO-280/1.png", imagenes: ["/fotos/SUP-GLUCO-280/1.png", "/fotos/SUP-GLUCO-280/2.png", "/fotos/SUP-GLUCO-280/3.png"] },
   "SUP-COQ10-140": { imagen: "/fotos/SUP-COQ10-140/1.png", imagenes: ["/fotos/SUP-COQ10-140/1.png", "/fotos/SUP-COQ10-140/2.png"] },
+  "SUP-CREATINA-675": { imagen: "/fotos/SUP-CREATINA-675/1.png", imagenes: ["/fotos/SUP-CREATINA-675/1.png", "/fotos/SUP-CREATINA-675/2.png"] },
+  "SUP-BERBER-FG120": { imagen: "/fotos/SUP-BERBER-FG120/1.png", imagenes: ["/fotos/SUP-BERBER-FG120/1.png", "/fotos/SUP-BERBER-FG120/2.png", "/fotos/SUP-BERBER-FG120/3.png"] },
 };

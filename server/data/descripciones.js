@@ -146,4 +146,14 @@ export const descripcionesProductos = {
     paraQue: "• Apoya la salud del corazón.\n• Antioxidante que combate los radicales libres.\n• Ayuda a la producción de energía celular.\n• Marca #1 recomendada por farmacéuticos.",
     modoUso: "Tomar 1 cápsula blanda al día con alimentos, o según indicación profesional.",
   },
+  "SUP-CREATINA-675": {
+    descripcion: "Creatina monohidratada micronizada de Orgain, sin sabor. El suplemento más estudiado para la fuerza y el rendimiento. 5 g por porción y alrededor de 135 porciones por envase (675 g). Se mezcla fácil con agua o tu bebida favorita.",
+    paraQue: "• Aumenta la fuerza y la potencia.\n• Mejora la recuperación muscular.\n• Apoya la salud cerebral.\n• Micronizada: se disuelve mejor.",
+    modoUso: "Mezclar 1 porción (5 g) con agua o bebida, 1 vez al día.",
+  },
+  "SUP-BERBER-FG120": {
+    descripcion: "Berberina Fitosoma de Feel Good Company, con tecnología de alta absorción para aprovechar mejor cada cápsula. Un aliado natural para el metabolismo. 120 cápsulas veganas, solo 1 al día.",
+    paraQue: "• Ayuda a mantener el azúcar en sangre en niveles saludables.\n• Apoya niveles saludables de colesterol.\n• Puede favorecer la composición corporal.\n• Alta absorción (fitosoma).",
+    modoUso: "Tomar 1 cápsula al día con alimentos, o según indicación profesional.",
+  },
 };

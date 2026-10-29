@@ -32,4 +32,6 @@ export const ajustes = {
   "CP-MINOXIDIL": { precio: 60000, oculto: false },
   "SUP-GLUCO-280": { precio: 160000, oculto: false },
   "SUP-COQ10-140": { precio: 260000, oculto: false },
+  "SUP-CREATINA-675": { precio: 160000, oculto: false },
+  "SUP-BERBER-FG120": { precio: 160000, oculto: false },
 };

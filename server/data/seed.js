@@ -332,6 +332,28 @@ export const productos = [
     descripcion: "Coenzima Q10 (CoQ10) de Nature Made, 200 mg. Antioxidante que apoya la salud del corazón y la energía celular. 140 cápsulas blandas.",
     destacado: false,
   },
+  {
+    sku: "SUP-CREATINA-675",
+    nombre: "Orgain Creatina Monohidratada Micronizada sin sabor (675 g)",
+    categoria: "suplementos",
+    marca: "Orgain",
+    precio: 160000,
+    stock: 2,
+    color: "#1f3a8a",
+    descripcion: "Creatina monohidratada micronizada de Orgain, sin sabor. 5 g por porción, aproximadamente 135 porciones (675 g). Apoya la fuerza, la recuperación muscular y la salud cerebral.",
+    destacado: false,
+  },
+  {
+    sku: "SUP-BERBER-FG120",
+    nombre: "Feel Good Berberina Fitosoma de alta absorción (120 cápsulas veganas)",
+    categoria: "suplementos",
+    marca: "Feel Good Company",
+    precio: 160000,
+    stock: 2,
+    color: "#2f6f3e",
+    descripcion: "Berberina Fitosoma de Feel Good Company, de alta absorción. Ayuda a mantener niveles saludables de azúcar en sangre y colesterol. 120 cápsulas veganas, 1 al día.",
+    destacado: false,
+  },
 ];
 
 // Aplica las fotos (imagen + galería) a cada producto por SKU.
