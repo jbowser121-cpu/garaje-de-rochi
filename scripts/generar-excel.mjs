@@ -65,7 +65,8 @@ cabeceras.forEach((t, i) => {
 filaCab.height = 32;
 
 let r = 5;
-for (const p of productos) {
+const ordenados = [...productos].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+for (const p of ordenados) {
   const fila = h.getRow(r);
   fila.getCell(1).value = p.nombre;
   fila.getCell(2).value = p.marca || '';
