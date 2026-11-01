@@ -6,7 +6,7 @@ export const imagenesProductos = {
   "VM-MAGGLY-180": { imagen: "/fotos/VM-MAGGLY-180/1.png", imagenes: ["/fotos/VM-MAGGLY-180/1.png", "/fotos/VM-MAGGLY-180/2.png", "/fotos/VM-MAGGLY-180/3.png"] },
   "CP-HSN-ADV-230": { imagen: "/fotos/CP-HSN-ADV-230/1.png", imagenes: ["/fotos/CP-HSN-ADV-230/1.png", "/fotos/CP-HSN-ADV-230/2.png", "/fotos/CP-HSN-ADV-230/3.png"] },
   "VM-SUPERB-500": { imagen: "/fotos/VM-SUPERB-500/1.png", imagenes: ["/fotos/VM-SUPERB-500/1.png", "/fotos/VM-SUPERB-500/2.png", "/fotos/VM-SUPERB-500/3.png"] },
-  "VM-VITC-XS-365": { imagen: "/fotos/VM-VITC-XS-365/1.png", imagenes: ["/fotos/VM-VITC-XS-365/1.png", "/fotos/VM-VITC-XS-365/2.png", "/fotos/VM-VITC-XS-365/3.png"] },
+  "VM-VITC-XS-365": { imagen: "/fotos/VM-VITC-XS-365/1.png", imagenes: ["/fotos/VM-VITC-XS-365/1.png"] },
   "VM-VITC-500": { imagen: "/fotos/VM-VITC-500/1.png", imagenes: ["/fotos/VM-VITC-500/1.png", "/fotos/VM-VITC-500/2.png", "/fotos/VM-VITC-500/3.png"] },
   "CP-HSN-250": { imagen: "/fotos/CP-HSN-250/1.png", imagenes: ["/fotos/CP-HSN-250/1.png", "/fotos/CP-HSN-250/2.png", "/fotos/CP-HSN-250/3.png"] },
   "SUP-FATBURN-130": { imagen: "/fotos/SUP-FATBURN-130/1.png", imagenes: ["/fotos/SUP-FATBURN-130/1.png", "/fotos/SUP-FATBURN-130/2.png", "/fotos/SUP-FATBURN-130/3.png"] },
@@ -25,7 +25,7 @@ export const imagenesProductos = {
   "VM-B12-300": { imagen: "/fotos/VM-B12-300/1.png", imagenes: ["/fotos/VM-B12-300/1.png", "/fotos/VM-B12-300/2.png"] },
   "SUP-MELA-250": { imagen: "/fotos/SUP-MELA-250/1.png", imagenes: ["/fotos/SUP-MELA-250/1.png", "/fotos/SUP-MELA-250/2.png", "/fotos/SUP-MELA-250/3.png"] },
   "SUP-PROBIO-100": { imagen: "/fotos/SUP-PROBIO-100/1.png", imagenes: ["/fotos/SUP-PROBIO-100/1.png", "/fotos/SUP-PROBIO-100/2.png"] },
-  "SUP-GINSENG-120": { imagen: "/fotos/SUP-GINSENG-120/1.png", imagenes: ["/fotos/SUP-GINSENG-120/1.png", "/fotos/SUP-GINSENG-120/2.png", "/fotos/SUP-GINSENG-120/3.png"] },
+  "SUP-GINSENG-120": { imagen: "/fotos/SUP-GINSENG-120/1.png", imagenes: ["/fotos/SUP-GINSENG-120/1.png"] },
   "VM-VITD3-650": { imagen: "/fotos/VM-VITD3-650/1.png", imagenes: ["/fotos/VM-VITD3-650/1.png", "/fotos/VM-VITD3-650/2.png", "/fotos/VM-VITD3-650/3.png"] },
   "VM-SELENIO-240": { imagen: "/fotos/VM-SELENIO-240/1.png", imagenes: ["/fotos/VM-SELENIO-240/1.png", "/fotos/VM-SELENIO-240/2.png", "/fotos/VM-SELENIO-240/3.png"] },
   "CP-MINOXIDIL": { imagen: "/fotos/CP-MINOXIDIL/1.png", imagenes: ["/fotos/CP-MINOXIDIL/1.png"] },
@@ -33,4 +33,5 @@ export const imagenesProductos = {
   "SUP-COQ10-140": { imagen: "/fotos/SUP-COQ10-140/1.png", imagenes: ["/fotos/SUP-COQ10-140/1.png", "/fotos/SUP-COQ10-140/2.png"] },
   "SUP-CREATINA-675": { imagen: "/fotos/SUP-CREATINA-675/1.png", imagenes: ["/fotos/SUP-CREATINA-675/1.png", "/fotos/SUP-CREATINA-675/2.png"] },
   "SUP-BERBER-FG120": { imagen: "/fotos/SUP-BERBER-FG120/1.png", imagenes: ["/fotos/SUP-BERBER-FG120/1.png", "/fotos/SUP-BERBER-FG120/2.png", "/fotos/SUP-BERBER-FG120/3.png"] },
+  "VM-ZINC-400": { imagen: "/fotos/VM-ZINC-400/1.png", imagenes: ["/fotos/VM-ZINC-400/1.png"] },
 };

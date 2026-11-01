@@ -21,6 +21,7 @@ export const inventario = {
   "VM-PRENATAL-150": 1,
   "VM-VITC-XS-365": 2,
   "VM-VITD3-650": 0,
+  "VM-ZINC-400": 1,
   "CP-HSN-250": 2,
   "CP-HSN-ADV-230": 1,
   "VM-MAGGLY-180": 5,
