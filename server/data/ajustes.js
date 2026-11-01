@@ -1,6 +1,6 @@
 // Precios y visibilidad de El Garaje de Rochi.
 // Se genera desde inventario.xlsx — no lo edites a mano.
-// Última actualización: 29/10/2026, 10:59:26 a. m.
+// Última actualización: 1/11/2026, 2:24:00 p. m.
 
 export const ajustes = {
   "SUP-GINSENG-120": { precio: 120000, oculto: false },
