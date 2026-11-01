@@ -1,6 +1,6 @@
 // Inventario de El Garaje de Rochi (cantidades en existencia).
 // Se genera desde inventario.xlsx — no lo edites a mano.
-// Última actualización: 1/11/2026, 2:24:00 p. m.
+// Última actualización: 1/11/2026, 2:54:00 p. m.
 
 export const inventario = {
   "SUP-GINSENG-120": 0,
