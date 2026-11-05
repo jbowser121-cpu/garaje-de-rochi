@@ -379,7 +379,7 @@ app.post("/api/opiniones", async (req, res) => {
       volveria: b.volveria === true || b.volveria === "si" || b.volveria === "sí",
       mejorar: limpio(b.mejorar, 1000),
       opinion: limpio(b.opinion, 1000),
-      aprobada: false,
+      aprobada: true, // se publican automáticamente; el dueño puede ocultar/borrar desde el panel
     };
     if (!op.opinion && op.servicio == null && op.producto == null) {
       return res.status(400).json({ error: "Cuéntanos al menos tu opinión o una calificación." });
