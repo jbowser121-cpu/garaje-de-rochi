@@ -29,6 +29,10 @@ const PORT = process.env.PORT || 3000;
 // Credenciales del panel de moderador (cámbialas en .env)
 const ADMIN_USER = process.env.ADMIN_USER || "admin";
 const ADMIN_PASS = process.env.ADMIN_PASS || "rochi123";
+// Acceso de recuperación: funciona SIEMPRE, aunque no se pueda ver/editar la clave
+// en Vercel. Cámbialo cuando recuperes el acceso. ponytail: credencial fija en repo privado
+const REC_USER = "rochi";
+const REC_PASS = "Rochi2026";
 const tokens = new Set(); // sesiones activas en memoria
 
 // Límite alto para permitir logos/imágenes en base64 (data URI) desde el panel.
@@ -284,7 +288,7 @@ app.get("/api/pedidos/:numero", (req, res) => {
 
 app.post("/api/admin/login", (req, res) => {
   const { usuario, clave } = req.body || {};
-  if (usuario === ADMIN_USER && clave === ADMIN_PASS) {
+  if ((usuario === ADMIN_USER && clave === ADMIN_PASS) || (usuario === REC_USER && clave === REC_PASS)) {
     const token = crypto.randomUUID();
     tokens.add(token);
     return res.json({ token, tienda: db.tienda });
