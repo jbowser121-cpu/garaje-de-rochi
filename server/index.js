@@ -370,7 +370,7 @@ app.post("/api/opiniones", async (req, res) => {
     // Habeas Data (Ley 1581/2012): sin autorización no se guardan correo ni teléfono.
     const autoriza = b.autoriza === true || b.autoriza === "si" || b.autoriza === "true";
     const op = {
-      nombre: limpio(b.nombre, 60) || "Cliente",
+      nombre: limpio(b.nombre, 60),
       correo: autoriza ? limpio(b.correo, 120) : "",
       telefono: autoriza ? limpio(b.telefono, 20) : "",
       autoriza_datos: autoriza,
@@ -381,6 +381,9 @@ app.post("/api/opiniones", async (req, res) => {
       opinion: limpio(b.opinion, 1000),
       aprobada: true, // se publican automáticamente; el dueño puede ocultar/borrar desde el panel
     };
+    if (!op.nombre) {
+      return res.status(400).json({ error: "Escribe tu nombre para publicar tu opinión." });
+    }
     if (!op.opinion && op.servicio == null && op.producto == null) {
       return res.status(400).json({ error: "Cuéntanos al menos tu opinión o una calificación." });
     }

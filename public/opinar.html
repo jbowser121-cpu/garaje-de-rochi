@@ -88,7 +88,7 @@
       <label class="q" for="opinion">Tu opinión para la página web</label>
       <textarea id="opinion" rows="4" placeholder="Cuéntale a otros cómo fue tu experiencia con nosotros"></textarea>
       <div class="datos">
-        <input type="text" id="nombre" maxlength="60" placeholder="Tu nombre (aparecerá junto a tu opinión)" />
+        <input type="text" id="nombre" maxlength="60" required placeholder="Tu nombre * (obligatorio, aparecerá junto a tu opinión)" />
         <input type="email" id="correo" maxlength="120" placeholder="Tu correo (privado, no se publica)" />
         <input type="tel" id="telefono" maxlength="20" placeholder="Tu teléfono o WhatsApp (privado, no se publica)" />
       </div>
@@ -104,7 +104,7 @@
 
     <button class="btn btn--primary enviar" id="enviar">Enviar mi opinión</button>
     <div class="msg-err" id="err" style="display:none"></div>
-    <p class="hint" style="text-align:center">Las opiniones se revisan antes de publicarse.</p>
+    <p class="hint" style="text-align:center">Tu opinión aparecerá en la página junto a tu nombre.</p>
   </div>
 
   <div id="gracias" class="card ok" style="display:none">
@@ -121,27 +121,29 @@
   function val(name){ const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; }
 
   $("#enviar").addEventListener("click", async () => {
-    const consent = $("#consent").checked;
-    const autoriza = $("#consentDatos").checked;
+    const consent = $("#consent").checked;        // acepta mostrar nombre + opinión en público
+    const autoriza = $("#consentDatos").checked;   // acepta tratamiento de datos (correo/teléfono)
     const correo = $("#correo").value.trim();
     const telefono = $("#telefono").value.trim();
-    const nombre = consent ? ($("#nombre").value || "").trim() : "";
+    const nombre = ($("#nombre").value || "").trim();
+    const err = (txt) => { const e = $("#err"); e.textContent = txt; e.style.display = "block"; };
+    // Nombre obligatorio.
+    if (!nombre) { err("Escribe tu nombre para publicar tu opinión."); return; }
+    if (!consent) { err("Marca la casilla para autorizar que tu nombre y tu opinión se muestren en la página."); return; }
     const body = {
-      nombre: nombre || "Cliente",
-      correo, telefono, autoriza,
+      nombre, correo, telefono, autoriza,
       servicio: val("servicio"),
       producto: val("producto"),
       volveria: val("volveria"),
       mejorar: $("#mejorar").value.trim(),
-      opinion: consent ? $("#opinion").value.trim() : "",
+      opinion: $("#opinion").value.trim(),
     };
     if (!body.servicio && !body.producto && !body.opinion.trim()) {
-      const e = $("#err"); e.textContent = "Déjanos al menos una calificación o tu opinión 🙂"; e.style.display = "block";
-      return;
+      err("Déjanos al menos una calificación o tu opinión 🙂"); return;
     }
-    if ((correo || telefono || nombre) && !autoriza) {
-      const e = $("#err"); e.textContent = "Para dejar tu nombre, correo o teléfono, marca la casilla de autorización de datos."; e.style.display = "block";
-      return;
+    // El correo y el teléfono son datos privados: requieren autorización de datos.
+    if ((correo || telefono) && !autoriza) {
+      err("Para dejar tu correo o teléfono, marca la casilla de autorización de datos."); return;
     }
     $("#enviar").disabled = true; $("#enviar").textContent = "Enviando…"; $("#err").style.display = "none";
     try {
