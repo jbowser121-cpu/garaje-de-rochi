@@ -343,8 +343,13 @@ app.post("/api/opiniones", async (req, res) => {
     const b = req.body || {};
     const limpio = (s, max) => String(s ?? "").trim().slice(0, max);
     const nota = (n) => { const x = Number(n); return x >= 1 && x <= 5 ? Math.round(x) : null; };
+    // Habeas Data (Ley 1581/2012): sin autorización no se guardan correo ni teléfono.
+    const autoriza = b.autoriza === true || b.autoriza === "si" || b.autoriza === "true";
     const op = {
       nombre: limpio(b.nombre, 60) || "Cliente",
+      correo: autoriza ? limpio(b.correo, 120) : "",
+      telefono: autoriza ? limpio(b.telefono, 20) : "",
+      autoriza_datos: autoriza,
       servicio: nota(b.servicio),
       producto: nota(b.producto),
       volveria: b.volveria === true || b.volveria === "si" || b.volveria === "sí",
@@ -365,6 +370,8 @@ app.post("/api/opiniones", async (req, res) => {
       const texto = [
         `📝 *NUEVA OPINIÓN — ${db.tienda.nombre}*`,
         `Cliente: ${op.nombre}`,
+        op.correo ? `Correo: ${op.correo}` : "",
+        op.telefono ? `Teléfono: ${op.telefono}` : "",
         `Servicio: ${estrellas(op.servicio)}`,
         `Producto: ${estrellas(op.producto)}`,
         `¿Volvería a comprar?: ${op.volveria ? "Sí" : "No"}`,

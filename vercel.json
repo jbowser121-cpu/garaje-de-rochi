@@ -13,6 +13,8 @@
     { "src": "/opiniones.html", "dest": "/public/opiniones.html" },
     { "src": "/devoluciones", "dest": "/public/devoluciones.html" },
     { "src": "/devoluciones.html", "dest": "/public/devoluciones.html" },
+    { "src": "/privacidad", "dest": "/public/privacidad.html" },
+    { "src": "/privacidad.html", "dest": "/public/privacidad.html" },
     { "src": "/manifest.json", "dest": "/public/manifest.json" },
     { "src": "/sw.js", "dest": "/public/sw.js" },
     { "src": "/", "dest": "/public/index.html" },

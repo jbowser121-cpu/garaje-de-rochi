@@ -16,6 +16,8 @@
   .enc textarea, .enc input[type=text] { width:100%; border:1px solid var(--line); border-radius:10px; padding:11px;
     font-family:inherit; font-size:15px; resize:vertical; box-sizing:border-box; }
   .enc textarea:focus, .enc input:focus { outline:2px solid var(--teal); border-color: var(--teal); }
+  .datos { display:grid; gap:10px; margin-top:12px; }
+  .consent a { color: var(--teal-deep); font-weight:600; }
   /* estrellas con radios (row-reverse para el truco del ~ ) */
   .stars { display:inline-flex; flex-direction:row-reverse; gap:4px; }
   .stars input { position:absolute; opacity:0; width:0; height:0; }
@@ -85,12 +87,18 @@
     <div class="card">
       <label class="q" for="opinion">Tu opinión para la página web</label>
       <textarea id="opinion" rows="4" placeholder="Cuéntale a otros cómo fue tu experiencia con nosotros"></textarea>
-      <div style="margin-top:12px">
+      <div class="datos">
         <input type="text" id="nombre" maxlength="60" placeholder="Tu nombre (aparecerá junto a tu opinión)" />
+        <input type="email" id="correo" maxlength="120" placeholder="Tu correo (privado, no se publica)" />
+        <input type="tel" id="telefono" maxlength="20" placeholder="Tu teléfono o WhatsApp (privado, no se publica)" />
       </div>
       <label class="consent">
         <input type="checkbox" id="consent" checked />
-        <span>Autorizo que mi opinión y mi nombre se muestren públicamente en la página de El Garaje de Rochi.</span>
+        <span>Autorizo que mi <b>opinión y mi nombre</b> se muestren públicamente en la página de El Garaje de Rochi.</span>
+      </label>
+      <label class="consent">
+        <input type="checkbox" id="consentDatos" />
+        <span>Autorizo el <b>tratamiento de mis datos personales</b> (nombre, correo y teléfono) conforme a la <a href="/privacidad" target="_blank" rel="noopener">Política de Privacidad</a>. El correo y el teléfono no se publican.</span>
       </label>
     </div>
 
@@ -114,8 +122,13 @@
 
   $("#enviar").addEventListener("click", async () => {
     const consent = $("#consent").checked;
+    const autoriza = $("#consentDatos").checked;
+    const correo = $("#correo").value.trim();
+    const telefono = $("#telefono").value.trim();
+    const nombre = consent ? ($("#nombre").value || "").trim() : "";
     const body = {
-      nombre: consent ? ($("#nombre").value || "").trim() : "Cliente",
+      nombre: nombre || "Cliente",
+      correo, telefono, autoriza,
       servicio: val("servicio"),
       producto: val("producto"),
       volveria: val("volveria"),
@@ -124,6 +137,10 @@
     };
     if (!body.servicio && !body.producto && !body.opinion.trim()) {
       const e = $("#err"); e.textContent = "Déjanos al menos una calificación o tu opinión 🙂"; e.style.display = "block";
+      return;
+    }
+    if ((correo || telefono || nombre) && !autoriza) {
+      const e = $("#err"); e.textContent = "Para dejar tu nombre, correo o teléfono, marca la casilla de autorización de datos."; e.style.display = "block";
       return;
     }
     $("#enviar").disabled = true; $("#enviar").textContent = "Enviando…"; $("#err").style.display = "none";

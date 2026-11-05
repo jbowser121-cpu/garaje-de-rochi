@@ -229,7 +229,7 @@
         $("#tbodyOpiniones").innerHTML = lista.length
           ? lista.map((o) => `
             <tr>
-              <td>${(o.nombre || "Cliente").replace(/</g,"&lt;")}<br><span style="font-size:11px;color:var(--muted)">${o.creado ? new Date(o.creado).toLocaleDateString("es-CO") : ""}</span></td>
+              <td>${(o.nombre || "Cliente").replace(/</g,"&lt;")}${o.correo ? `<br><span style="font-size:11px">📧 ${o.correo.replace(/</g,"&lt;")}</span>` : ""}${o.telefono ? `<br><span style="font-size:11px">📞 ${o.telefono.replace(/</g,"&lt;")}</span>` : ""}<br><span style="font-size:11px;color:var(--muted)">${o.creado ? new Date(o.creado).toLocaleDateString("es-CO") : ""}</span></td>
               <td title="Servicio">${estrellasTxt(o.servicio)}</td>
               <td title="Producto">${estrellasTxt(o.producto)}</td>
               <td>${o.volveria ? "👍" : "👎"}</td>
