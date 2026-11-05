@@ -402,7 +402,7 @@ app.get("/api/opiniones", async (req, res) => {
     };
     res.json({ opiniones: lista, stats, configurado: true });
   } catch (e) {
-    res.status(500).json({ error: "No se pudieron cargar las opiniones." });
+    res.status(500).json({ error: "No se pudieron cargar las opiniones.", detalle: String(e.message).slice(0, 300) });
   }
 });
 

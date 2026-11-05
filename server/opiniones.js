@@ -31,7 +31,7 @@ export async function guardar(op) {
 export async function listarPublicas() {
   const qs = "?aprobada=eq.true&select=nombre,servicio,producto,volveria,opinion,creado&order=creado.desc";
   const r = await fetch(endpoint(qs), { headers: headers() });
-  if (!r.ok) throw new Error(`Supabase ${r.status}`);
+  if (!r.ok) throw new Error(`Supabase ${r.status}: ${await r.text()}`);
   return r.json();
 }
 
