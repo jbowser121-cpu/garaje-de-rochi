@@ -12,6 +12,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { responder } from "./brain.js";
+import * as colawa from "../server/colawa.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const QR_PNG = path.join(__dirname, "whatsapp-qr.png");
@@ -84,7 +85,41 @@ client.on("ready", () => {
   console.log("\n🟢 Bot de WhatsApp conectado y respondiendo.\n");
   setEstado("conectado");
   try { fs.existsSync(QR_PNG) && fs.unlinkSync(QR_PNG); } catch {}
+  iniciarColaOpiniones();
 });
+
+// --- Envía los WhatsApp de opinión encolados por la tienda (Supabase) ---
+// La web (en Vercel) no puede enviar WhatsApp, así que deja el mensaje en cola y
+// este bot lo vacía cada minuto. Marca enviado=true tras enviarlo (o si el número
+// no está en WhatsApp, para no reintentar en bucle).
+function iniciarColaOpiniones() {
+  if (!colawa.configurado()) {
+    console.log("ℹ️  Cola de opiniones inactiva (faltan SUPABASE_URL/SUPABASE_KEY en el .env del PC).");
+    return;
+  }
+  const revisar = async () => {
+    try {
+      for (const row of await colawa.pendientes()) {
+        try {
+          const id = await client.getNumberId(row.telefono); // null si no está en WhatsApp
+          if (id) {
+            await client.sendMessage(id._serialized, row.mensaje);
+            console.log(`⭐ Opinión enviada a ${row.telefono}`);
+          } else {
+            console.log(`⚠️  ${row.telefono} no está en WhatsApp; se descarta.`);
+          }
+          await colawa.marcarEnviado(row.id); // enviado o descartado: no reintentar
+        } catch (e) {
+          console.error(`No se pudo enviar a ${row.telefono}:`, e.message); // se reintenta luego
+        }
+      }
+    } catch (e) {
+      console.error("Error revisando la cola de opiniones:", e.message);
+    }
+  };
+  revisar();
+  setInterval(revisar, 60 * 1000);
+}
 
 // --- Responder SOLO a chats nuevos ---
 // Guarda cuándo se le respondió por última vez a cada contacto. Si ya se le respondió

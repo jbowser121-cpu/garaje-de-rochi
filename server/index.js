@@ -6,8 +6,23 @@ import "dotenv/config";
 import { db } from "./db.js";
 import { avisar, mensajePedido } from "./avisos.js";
 import * as opiniones from "./opiniones.js";
+import * as colawa from "./colawa.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Encola un WhatsApp al cliente para pedirle su opinión tras la compra.
+// Lo envía el bot del PC (bots/whatsapp.js); aquí (Vercel) solo se deja en cola.
+async function pedirOpinionCliente(telefono, nombre) {
+  if (!telefono || !colawa.configurado()) return;
+  const sitio = process.env.PUBLIC_URL || "https://garaje-de-rochi-xi.vercel.app";
+  const saludo = nombre ? `¡Hola ${String(nombre).split(" ")[0]}! ` : "¡Hola! ";
+  const mensaje =
+    `${saludo}Gracias por tu compra en *${db.tienda.nombre}* 💚\n\n` +
+    `Cuando recibas tu pedido, nos encantaría conocer tu opinión. Te toma 1 minuto:\n${sitio}/opinar\n\n` +
+    `¡Gracias por confiar en nosotros! 🙌`;
+  try { await colawa.encolar(telefono, mensaje); }
+  catch (e) { console.error("No se pudo encolar el WhatsApp de opinión:", e.message); }
+}
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -176,6 +191,8 @@ app.post("/api/pedidos", async (req, res) => {
     } catch (e) {
       console.error("No se pudo avisar del pedido:", e);
     }
+    // Encolar WhatsApp al cliente pidiéndole su opinión (lo envía el bot del PC).
+    await pedirOpinionCliente(cliente?.telefono, cliente?.nombre);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -250,6 +267,7 @@ app.post("/api/wompi/webhook", async (req, res) => {
       transaccion: t.id,
     });
     await avisar(texto, `PAGO APROBADO — ${db.tienda.nombre}`);
+    await pedirOpinionCliente(t.customer_data?.phone_number || dir.phone_number, t.customer_data?.full_name);
   } catch (err) {
     console.error("Error procesando webhook de Wompi:", err);
   }
