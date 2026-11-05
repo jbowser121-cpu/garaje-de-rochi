@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Tu opinión — El Garaje de Rochi</title>
+<link rel="icon" href="/garaje.ico" />
+<link rel="stylesheet" href="/styles.css" />
+<style>
+  .enc { max-width: 620px; margin: 0 auto; padding: 24px max(16px, env(safe-area-inset-left)) 60px; }
+  .enc h1 { font-size: clamp(22px, 6vw, 30px); color: var(--ink); margin:.2em 0; }
+  .enc .lead { color: var(--muted); margin-bottom: 18px; }
+  .enc .card { background: var(--white); border:1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 18px 20px; margin-top: 14px; }
+  .enc label.q { display:block; font-weight:700; color: var(--ink); margin-bottom: 8px; }
+  .enc textarea, .enc input[type=text] { width:100%; border:1px solid var(--line); border-radius:10px; padding:11px;
+    font-family:inherit; font-size:15px; resize:vertical; box-sizing:border-box; }
+  .enc textarea:focus, .enc input:focus { outline:2px solid var(--teal); border-color: var(--teal); }
+  /* estrellas con radios (row-reverse para el truco del ~ ) */
+  .stars { display:inline-flex; flex-direction:row-reverse; gap:4px; }
+  .stars input { position:absolute; opacity:0; width:0; height:0; }
+  .stars label { font-size:34px; color:#d9e2e0; cursor:pointer; line-height:1; transition:color .1s; }
+  .stars label:hover, .stars label:hover ~ label,
+  .stars input:checked ~ label { color:#ffc531; }
+  .stars input:focus-visible + label { outline:2px solid var(--teal); border-radius:4px; }
+  .si-no { display:flex; gap:10px; }
+  .si-no label { flex:1; text-align:center; border:1.5px solid var(--line); border-radius:10px; padding:10px;
+    cursor:pointer; font-weight:700; color: var(--muted); }
+  .si-no input { position:absolute; opacity:0; }
+  .si-no input:checked + span { color: var(--teal-deep); }
+  .si-no label:has(input:checked) { border-color: var(--teal); background: var(--mint); }
+  .hint { font-size:12.5px; color: var(--muted); margin-top:6px; }
+  .enviar { width:100%; margin-top:18px; font-size:16px; padding:13px; }
+  .ok { text-align:center; padding:30px 10px; }
+  .ok .big { font-size:52px; }
+  .ok h2 { color: var(--teal-deep); }
+  .msg-err { color:#c0392b; font-weight:600; margin-top:10px; text-align:center; }
+  .top a { color: var(--teal-deep); text-decoration:none; font-weight:600; font-size:14px; }
+  .consent { display:flex; gap:9px; align-items:flex-start; font-size:13.5px; color: var(--ink); margin-top:6px; }
+  .consent input { margin-top:3px; }
+</style>
+</head>
+<body>
+<div class="enc">
+  <div class="top"><a href="/">← Ir a la tienda</a></div>
+  <div id="form">
+    <h1>¿Qué tal estuvo? 💚</h1>
+    <p class="lead">Tu opinión nos ayuda a mejorar y a que otros te conozcan. Toma menos de un minuto.</p>
+
+    <div class="card">
+      <label class="q">¿Cómo te pareció nuestro <b>servicio</b>?</label>
+      <div class="stars" role="radiogroup" aria-label="Calificación del servicio">
+        <input type="radio" name="servicio" id="s5" value="5"><label for="s5" title="Excelente">★</label>
+        <input type="radio" name="servicio" id="s4" value="4"><label for="s4">★</label>
+        <input type="radio" name="servicio" id="s3" value="3"><label for="s3">★</label>
+        <input type="radio" name="servicio" id="s2" value="2"><label for="s2">★</label>
+        <input type="radio" name="servicio" id="s1" value="1"><label for="s1" title="Malo">★</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="q">¿Qué tan bueno te pareció el <b>producto</b>?</label>
+      <div class="stars" role="radiogroup" aria-label="Calificación del producto">
+        <input type="radio" name="producto" id="p5" value="5"><label for="p5">★</label>
+        <input type="radio" name="producto" id="p4" value="4"><label for="p4">★</label>
+        <input type="radio" name="producto" id="p3" value="3"><label for="p3">★</label>
+        <input type="radio" name="producto" id="p2" value="2"><label for="p2">★</label>
+        <input type="radio" name="producto" id="p1" value="1"><label for="p1">★</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="q">¿Nos volverías a comprar?</label>
+      <div class="si-no">
+        <label><input type="radio" name="volveria" value="si"><span>👍 Sí</span></label>
+        <label><input type="radio" name="volveria" value="no"><span>👎 No</span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="q" for="mejorar">¿Qué deberíamos mejorar?</label>
+      <textarea id="mejorar" rows="3" placeholder="Cuéntanos con confianza (opcional)"></textarea>
+    </div>
+
+    <div class="card">
+      <label class="q" for="opinion">Tu opinión para la página web</label>
+      <textarea id="opinion" rows="4" placeholder="Cuéntale a otros cómo fue tu experiencia con nosotros"></textarea>
+      <div style="margin-top:12px">
+        <input type="text" id="nombre" maxlength="60" placeholder="Tu nombre (aparecerá junto a tu opinión)" />
+      </div>
+      <label class="consent">
+        <input type="checkbox" id="consent" checked />
+        <span>Autorizo que mi opinión y mi nombre se muestren públicamente en la página de El Garaje de Rochi.</span>
+      </label>
+    </div>
+
+    <button class="btn btn--primary enviar" id="enviar">Enviar mi opinión</button>
+    <div class="msg-err" id="err" style="display:none"></div>
+    <p class="hint" style="text-align:center">Las opiniones se revisan antes de publicarse.</p>
+  </div>
+
+  <div id="gracias" class="card ok" style="display:none">
+    <div class="big">🙌</div>
+    <h2>¡Gracias por tu opinión!</h2>
+    <p class="lead">La revisaremos y, si la publicas, aparecerá en nuestra página muy pronto.</p>
+    <a class="btn btn--primary" href="/opiniones" style="margin-top:6px">Ver opiniones</a>
+    <div style="margin-top:12px"><a class="top" href="/">← Volver a la tienda</a></div>
+  </div>
+</div>
+
+<script>
+  const $ = (s) => document.querySelector(s);
+  function val(name){ const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; }
+
+  $("#enviar").addEventListener("click", async () => {
+    const consent = $("#consent").checked;
+    const body = {
+      nombre: consent ? ($("#nombre").value || "").trim() : "Cliente",
+      servicio: val("servicio"),
+      producto: val("producto"),
+      volveria: val("volveria"),
+      mejorar: $("#mejorar").value.trim(),
+      opinion: consent ? $("#opinion").value.trim() : "",
+    };
+    if (!body.servicio && !body.producto && !body.opinion.trim()) {
+      const e = $("#err"); e.textContent = "Déjanos al menos una calificación o tu opinión 🙂"; e.style.display = "block";
+      return;
+    }
+    $("#enviar").disabled = true; $("#enviar").textContent = "Enviando…"; $("#err").style.display = "none";
+    try {
+      const r = await fetch("/api/opiniones", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+      });
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || "No se pudo enviar.");
+      $("#form").style.display = "none"; $("#gracias").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      const el = $("#err"); el.textContent = e.message || "No se pudo enviar. Intenta de nuevo."; el.style.display = "block";
+      $("#enviar").disabled = false; $("#enviar").textContent = "Enviar mi opinión";
+    }
+  });
+</script>
+</body>
+</html>

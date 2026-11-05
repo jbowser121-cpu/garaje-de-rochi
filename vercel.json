@@ -7,6 +7,12 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
     { "src": "/admin.html", "dest": "/public/admin.html" },
+    { "src": "/opinar", "dest": "/public/opinar.html" },
+    { "src": "/opinar.html", "dest": "/public/opinar.html" },
+    { "src": "/opiniones", "dest": "/public/opiniones.html" },
+    { "src": "/opiniones.html", "dest": "/public/opiniones.html" },
+    { "src": "/devoluciones", "dest": "/public/devoluciones.html" },
+    { "src": "/devoluciones.html", "dest": "/public/devoluciones.html" },
     { "src": "/manifest.json", "dest": "/public/manifest.json" },
     { "src": "/sw.js", "dest": "/public/sw.js" },
     { "src": "/", "dest": "/public/index.html" },

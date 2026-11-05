@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import "dotenv/config";
 import { db } from "./db.js";
 import { avisar, mensajePedido } from "./avisos.js";
+import * as opiniones from "./opiniones.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -332,6 +333,85 @@ app.get("/api/admin/clientes/publicidad.csv", requireAdmin, (req, res) => {
   res.setHeader("Content-Type", "text/csv; charset=utf-8");
   res.setHeader("Content-Disposition", 'attachment; filename="correos-publicidad.csv"');
   res.send(csv);
+});
+
+// ---------- Opiniones de clientes ----------
+// Público: cualquiera con el enlace puede dejar su opinión. Queda SIN aprobar
+// hasta que el dueño la publique desde el panel (por eso son "verificadas").
+app.post("/api/opiniones", async (req, res) => {
+  try {
+    const b = req.body || {};
+    const limpio = (s, max) => String(s ?? "").trim().slice(0, max);
+    const nota = (n) => { const x = Number(n); return x >= 1 && x <= 5 ? Math.round(x) : null; };
+    const op = {
+      nombre: limpio(b.nombre, 60) || "Cliente",
+      servicio: nota(b.servicio),
+      producto: nota(b.producto),
+      volveria: b.volveria === true || b.volveria === "si" || b.volveria === "sí",
+      mejorar: limpio(b.mejorar, 1000),
+      opinion: limpio(b.opinion, 1000),
+      aprobada: false,
+    };
+    if (!op.opinion && op.servicio == null && op.producto == null) {
+      return res.status(400).json({ error: "Cuéntanos al menos tu opinión o una calificación." });
+    }
+    let guardada = false;
+    if (opiniones.configurado()) {
+      try { await opiniones.guardar(op); guardada = true; } catch (e) { console.error("Opinión no guardada:", e); }
+    }
+    // Aviso al dueño: llega aunque Supabase no esté configurado, así nunca se pierde.
+    try {
+      const estrellas = (n) => (n ? "★".repeat(n) + "☆".repeat(5 - n) : "—");
+      const texto = [
+        `📝 *NUEVA OPINIÓN — ${db.tienda.nombre}*`,
+        `Cliente: ${op.nombre}`,
+        `Servicio: ${estrellas(op.servicio)}`,
+        `Producto: ${estrellas(op.producto)}`,
+        `¿Volvería a comprar?: ${op.volveria ? "Sí" : "No"}`,
+        op.mejorar ? `Qué mejorar: ${op.mejorar}` : "",
+        op.opinion ? `Opinión pública: ${op.opinion}` : "",
+        guardada ? "Publícala desde el panel si quieres mostrarla." : "⚠ Guárdala a mano: Supabase no está configurado.",
+      ].filter(Boolean).join("\n");
+      await avisar(texto, `Nueva opinión — ${db.tienda.nombre}`);
+    } catch (e) { console.error("No se pudo avisar de la opinión:", e); }
+    res.status(201).json({ ok: true, guardada });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Público: opiniones aprobadas + promedios para el portal.
+app.get("/api/opiniones", async (req, res) => {
+  if (!opiniones.configurado()) return res.json({ opiniones: [], stats: null, configurado: false });
+  try {
+    const lista = await opiniones.listarPublicas();
+    const con = (k) => lista.filter((o) => o[k] != null);
+    const prom = (k) => { const a = con(k); return a.length ? a.reduce((s, o) => s + o[k], 0) / a.length : null; };
+    const stats = {
+      total: lista.length,
+      servicio: prom("servicio"),
+      producto: prom("producto"),
+      volveria: lista.length ? Math.round((lista.filter((o) => o.volveria).length / lista.length) * 100) : null,
+    };
+    res.json({ opiniones: lista, stats, configurado: true });
+  } catch (e) {
+    res.status(500).json({ error: "No se pudieron cargar las opiniones." });
+  }
+});
+
+// Panel del dueño: ver todas (pendientes y aprobadas), aprobar/ocultar, borrar.
+app.get("/api/admin/opiniones", requireAdmin, async (req, res) => {
+  if (!opiniones.configurado()) return res.json({ opiniones: [], configurado: false });
+  try { res.json({ opiniones: await opiniones.listarTodas(), configurado: true }); }
+  catch (e) { res.status(500).json({ error: e.message }); }
+});
+app.patch("/api/admin/opiniones/:id", requireAdmin, async (req, res) => {
+  try { res.json(await opiniones.aprobar(req.params.id, Boolean(req.body?.aprobada))); }
+  catch (e) { res.status(400).json({ error: e.message }); }
+});
+app.delete("/api/admin/opiniones/:id", requireAdmin, async (req, res) => {
+  try { res.json(await opiniones.borrar(req.params.id)); }
+  catch (e) { res.status(400).json({ error: e.message }); }
 });
 
 // ---------- Frontend estático ----------
