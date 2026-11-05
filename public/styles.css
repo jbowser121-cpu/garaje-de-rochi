@@ -395,3 +395,15 @@ a { color: inherit; }
   .pm { flex-direction: column; }
   .pm__media { flex-basis: auto; width: 100%; }
 }
+
+/* ---------- Opiniones en la portada ---------- */
+.op-home { max-width: 1100px; margin: 10px auto 30px; padding: 0 16px; }
+.op-home__head { display:flex; align-items:center; gap:12px; margin-bottom: 14px; }
+.op-home__head h2 { font-size: clamp(18px,4vw,24px); color: var(--ink); margin:0; }
+.op-home__ver { margin-left:auto; color: var(--teal-deep); text-decoration:none; font-weight:600; white-space:nowrap; }
+.op-home__grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.op-card { background: var(--white); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; }
+.op-card__stars { color:#ffc531; font-size:16px; letter-spacing:1px; margin-bottom:6px; }
+.op-card__text { color: var(--ink); line-height:1.5; margin:0 0 10px; }
+.op-card__name { font-size:13px; color: var(--muted); font-weight:600; }
+.op-home__cta { text-align:center; margin-top:18px; }

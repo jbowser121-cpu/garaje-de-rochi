@@ -41,6 +41,7 @@ async function init() {
   renderContacto();
   await cargarProductos();
   renderShowcase();
+  renderOpinionesHome();
   bindEvents();
   renderCart();
 }
@@ -600,8 +601,35 @@ async function enviarPedido(e) {
     <a class="btn btn--primary btn--block" style="text-decoration:none;display:block;margin-bottom:10px"
        href="https://wa.me/${state.tienda.whatsapp}?text=${waText}" target="_blank" rel="noopener">
        Enviar pedido por WhatsApp 💬
-    </a>`;
+    </a>
+    <div style="margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--mint)">
+      <p style="margin:0 0 8px;font-weight:700;color:var(--teal-deep)">Cuando recibas tu pedido, ¡cuéntanos! ⭐</p>
+      <p style="margin:0 0 10px;font-size:13px;color:var(--ink)">Tu opinión nos ayuda muchísimo y aparece en nuestra página.</p>
+      <a class="btn btn--block" style="text-decoration:none;display:block;background:#fff;border:1.5px solid var(--teal)"
+         href="/opinar" target="_blank" rel="noopener">Dejar mi opinión ✍️</a>
+    </div>`;
   $("#okModal").classList.add("open");
+}
+
+// ---------- Opiniones en la portada ----------
+async function renderOpinionesHome() {
+  let lista = [];
+  try {
+    const data = await fetch("/api/opiniones").then((r) => r.json());
+    lista = (data.opiniones || []).filter((o) => o.opinion).slice(0, 6);
+  } catch { return; }
+  if (!lista.length) return; // sin opiniones publicadas, no se muestra la sección
+  const estrellas = (n) => (n ? "★".repeat(n) + "☆".repeat(5 - n) : "");
+  const esc = (s) => String(s || "").replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
+  $("#opHomeGrid").innerHTML = lista.map((o) => {
+    const prom = o.servicio && o.producto ? Math.round((o.servicio + o.producto) / 2) : (o.servicio || o.producto || 0);
+    return `<article class="op-card">
+      <div class="op-card__stars">${estrellas(prom)}</div>
+      <p class="op-card__text">“${esc(o.opinion)}”</p>
+      <div class="op-card__name">— ${esc(o.nombre || "Cliente")}${o.volveria ? ' · <span style="color:var(--teal-deep)">volvería a comprar</span>' : ""}</div>
+    </article>`;
+  }).join("");
+  $("#opHome").hidden = false;
 }
 
 // ---------- Cuenta de cliente ----------

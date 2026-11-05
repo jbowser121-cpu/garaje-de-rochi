@@ -170,7 +170,9 @@ app.post("/api/pedidos", async (req, res) => {
         },
         referencia: `Pedido #${pedido.numero}`,
       });
-      await avisar(texto, `Nuevo pedido #${pedido.numero} — ${db.tienda.nombre}`);
+      const sitio = process.env.PUBLIC_URL || "https://garaje-de-rochi-xi.vercel.app";
+      const conOpinion = texto + `\n\n⭐ Al entregar, pídele su opinión:\n${sitio}/opinar`;
+      await avisar(conOpinion, `Nuevo pedido #${pedido.numero} — ${db.tienda.nombre}`);
     } catch (e) {
       console.error("No se pudo avisar del pedido:", e);
     }
