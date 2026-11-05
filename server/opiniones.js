@@ -2,19 +2,22 @@
 // En Vercel el disco es efímero, así que las opiniones NO pueden vivir en un archivo:
 // necesitan una base externa. Si SUPABASE_URL/SUPABASE_KEY no están configuradas,
 // queda deshabilitado y las rutas lo detectan con configurado().
-const URL = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
-const KEY = process.env.SUPABASE_KEY || ""; // usar la clave service_role (solo servidor)
+// Toma solo el origen (https://xxx.supabase.co), aunque peguen la URL con ruta extra.
+const RAW = (process.env.SUPABASE_URL || "").trim();
+let BASE = "";
+try { BASE = RAW ? new URL(RAW).origin : ""; } catch { BASE = RAW.replace(/\/+$/, ""); }
+const KEY = (process.env.SUPABASE_KEY || "").trim(); // clave secreta sb_secret_... (solo servidor)
 const TABLA = "opiniones";
 
 export function configurado() {
-  return Boolean(URL && KEY);
+  return Boolean(BASE && KEY);
 }
 
 function headers(extra = {}) {
   return { apikey: KEY, Authorization: `Bearer ${KEY}`, "Content-Type": "application/json", ...extra };
 }
 function endpoint(qs = "") {
-  return `${URL}/rest/v1/${TABLA}${qs}`;
+  return `${BASE}/rest/v1/${TABLA}${qs}`;
 }
 
 export async function guardar(op) {
