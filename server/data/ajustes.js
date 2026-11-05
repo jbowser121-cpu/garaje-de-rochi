@@ -1,6 +1,6 @@
 // Precios y visibilidad de El Garaje de Rochi.
 // Se genera desde inventario.xlsx — no lo edites a mano.
-// Última actualización: 1/11/2026, 2:54:00 p. m.
+// Última actualización: 5/11/2026, 8:40:59 a. m.
 
 export const ajustes = {
   "SUP-GINSENG-120": { precio: 120000, oculto: false },
@@ -12,6 +12,7 @@ export const ajustes = {
   "CP-MINOXIDIL": { precio: 60000, oculto: false },
   "SUP-FISHOIL-400": { precio: 130000, oculto: false },
   "VM-SUPERB-500": { precio: 130000, oculto: false },
+  "VM-VITC-XS-365": { precio: 160000, oculto: false },
   "VM-VITC-500": { precio: 130000, oculto: false },
   "VM-VITE-500": { precio: 120000, oculto: false },
   "SUP-MELA-250": { precio: 140000, oculto: false },
@@ -19,12 +20,11 @@ export const ajustes = {
   "VM-MAGCIT-180": { precio: 170000, oculto: false },
   "VM-MAGGUM-90": { precio: 130000, oculto: false },
   "VM-PRENATAL-150": { precio: 200000, oculto: false },
-  "VM-VITC-XS-365": { precio: 160000, oculto: false },
   "VM-VITD3-650": { precio: 130000, oculto: false },
-  "VM-ZINC-400": { precio: 130000, oculto: false },
   "CP-HSN-250": { precio: 120000, oculto: false },
   "CP-HSN-ADV-230": { precio: 130000, oculto: false },
   "VM-MAGGLY-180": { precio: 130000, oculto: false },
+  "VM-ZINC-400": { precio: 130000, oculto: false },
   "SUP-ACV-120": { precio: 130000, oculto: false },
   "VM-SELENIO-240": { precio: 160000, oculto: false },
   "SUP-CREATINA-675": { precio: 160000, oculto: false },
