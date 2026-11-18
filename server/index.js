@@ -7,6 +7,7 @@ import { db } from "./db.js";
 import { avisar, mensajePedido } from "./avisos.js";
 import * as opiniones from "./opiniones.js";
 import * as colawa from "./colawa.js";
+import * as likes from "./likes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -431,6 +432,30 @@ app.get("/api/opiniones", async (req, res) => {
   } catch (e) {
     console.error("Opiniones GET:", e);
     res.status(500).json({ error: "No se pudieron cargar las opiniones." });
+  }
+});
+
+// ---------- Likes (corazones) por producto ----------
+// Público. GET devuelve el conteo de todos; POST da o quita el like de un visitante.
+app.get("/api/likes", async (req, res) => {
+  if (!likes.configurado()) return res.json({ counts: {} });
+  try { res.json({ counts: await likes.contar() }); }
+  catch (e) { console.error("Likes GET:", e); res.json({ counts: {} }); }
+});
+
+app.post("/api/likes/:sku", async (req, res) => {
+  if (!likes.configurado()) return res.status(503).json({ error: "Likes no configurados." });
+  const visitante = String(req.body?.visitante || "").trim().slice(0, 60);
+  if (!visitante) return res.status(400).json({ error: "Falta el identificador de visitante." });
+  const sku = String(req.params.sku).slice(0, 60);
+  if (!db.obtenerProducto(sku)) return res.status(404).json({ error: "Producto no encontrado." });
+  try {
+    if (req.body?.like === false) await likes.quitar(sku, visitante);
+    else await likes.dar(sku, visitante);
+    res.json({ sku, likes: await likes.contarUno(sku) });
+  } catch (e) {
+    console.error("Likes POST:", e);
+    res.status(500).json({ error: "No se pudo registrar el like." });
   }
 });
 

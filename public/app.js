@@ -13,9 +13,60 @@ const state = {
   busqueda: "",
   cart: JSON.parse(localStorage.getItem("cart") || "{}"), // { sku: cantidad }
   cliente: JSON.parse(localStorage.getItem("gr_cliente") || "null"), // { email, nombre } o null
+  likes: {}, // { sku: cantidad de corazones } — se carga de /api/likes
 };
 
 const $ = (sel) => document.querySelector(sel);
+
+// ---------- Likes (corazones) por producto ----------
+// visitante: un id al azar por navegador, para que cada quien dé like una sola vez.
+function visitanteId() {
+  let v = localStorage.getItem("gr_vis");
+  if (!v) { v = (crypto.randomUUID ? crypto.randomUUID() : Date.now() + Math.random().toString(36).slice(2)); localStorage.setItem("gr_vis", v); }
+  return v;
+}
+function misLikes() { try { return new Set(JSON.parse(localStorage.getItem("gr_likes") || "[]")); } catch { return new Set(); } }
+function guardarMisLikes(set) { try { localStorage.setItem("gr_likes", JSON.stringify([...set])); } catch {} }
+async function cargarLikes() {
+  try { state.likes = (await fetch("/api/likes").then((r) => r.json())).counts || {}; }
+  catch { state.likes = {}; }
+}
+function pintarLike(btn, sku, liked) {
+  btn.classList.toggle("like--on", liked);
+  btn.setAttribute("aria-pressed", liked ? "true" : "false");
+  btn.querySelector(".like__ico").textContent = liked ? "❤️" : "🤍";
+  btn.querySelector(".like__n").textContent = state.likes[sku] || 0;
+}
+async function toggleLike(sku, btn) {
+  const set = misLikes();
+  const like = !set.has(sku);
+  if (like) set.add(sku); else set.delete(sku);
+  guardarMisLikes(set);
+  // Optimista: la UI reacciona de inmediato; luego la confirma el servidor.
+  state.likes[sku] = Math.max(0, (state.likes[sku] || 0) + (like ? 1 : -1));
+  pintarLike(btn, sku, like);
+  try {
+    const r = await fetch(`/api/likes/${encodeURIComponent(sku)}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ visitante: visitanteId(), like }),
+    });
+    if (r.ok) { state.likes[sku] = (await r.json()).likes; pintarLike(btn, sku, like); }
+  } catch {}
+}
+
+// ---------- Compartir la tienda con amigos y familia ----------
+async function compartir() {
+  const url = state.publicUrl || window.location.origin;
+  const titulo = state.tienda?.nombre || "El Garaje de Rochi";
+  const texto = `Mira ${titulo} 💚 Vitaminas y suplementos originales con envío a todo el país:`;
+  if (navigator.share) {
+    try { await navigator.share({ title: titulo, text: texto, url }); } catch {}
+    return;
+  }
+  // Sin compartir nativo (PC): copia el enlace y abre WhatsApp.
+  try { await navigator.clipboard.writeText(url); } catch {}
+  window.open(`https://wa.me/?text=${encodeURIComponent(texto + " " + url)}`, "_blank", "noopener");
+}
 
 async function init() {
   const info = await fetch("/api/tienda").then((r) => r.json());
@@ -32,7 +83,9 @@ async function init() {
   }
   $("#freeshipBanner").textContent = `🚚 Envío GRATIS en compras desde ${money(info.envios.umbralEnvioGratis)} · Envíos a todo el país`;
   $("#whatsappFab").href = `https://wa.me/${info.tienda.whatsapp}?text=${encodeURIComponent("Hola, quiero información de un producto")}`;
+  $("#shareBtn")?.addEventListener("click", compartir);
 
+  await cargarLikes();
   renderTicker();
   renderNav();
   renderChips();
@@ -228,15 +281,20 @@ function renderGrid() {
     grid.innerHTML = `<p class="empty">No encontramos productos para tu búsqueda.</p>`;
     return;
   }
+  const mset = misLikes();
   grid.innerHTML = state.productos
     .map((p) => {
       const enCarrito = state.cart[p.sku] || 0;
       const agotado = p.stock <= 0;
+      const liked = mset.has(p.sku);
       return `
       <article class="card ${agotado ? "card--agotado" : ""}">
         <div class="card__img" style="background:${p.color}22" data-ver="${p.sku}" title="Ver más grande">
           ${p.destacado && !agotado ? '<span class="card__pill">★ Destacado</span>' : ""}
           ${agotado ? '<span class="card__agotado-badge">Agotado</span>' : ""}
+          <button class="like ${liked ? "like--on" : ""}" data-like="${p.sku}" aria-label="Me gusta este producto" aria-pressed="${liked}">
+            <span class="like__ico">${liked ? "❤️" : "🤍"}</span><span class="like__n">${state.likes[p.sku] || 0}</span>
+          </button>
           ${bottle(p)}
           ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" class="card__photo" loading="lazy" onerror="this.remove()">` : ""}
         </div>
@@ -260,6 +318,9 @@ function renderGrid() {
   );
   grid.querySelectorAll("[data-ver]").forEach((el) =>
     el.addEventListener("click", () => abrirProducto(el.dataset.ver))
+  );
+  grid.querySelectorAll("[data-like]").forEach((b) =>
+    b.addEventListener("click", (e) => { e.stopPropagation(); toggleLike(b.dataset.like, b); })
   );
 }
 

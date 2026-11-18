@@ -407,3 +407,19 @@ a { color: inherit; }
 .op-card__text { color: var(--ink); line-height:1.5; margin:0 0 10px; }
 .op-card__name { font-size:13px; color: var(--muted); font-weight:600; }
 .op-home__cta { text-align:center; margin-top:18px; }
+
+/* ---------- Corazón de "me gusta" por producto ---------- */
+.like {
+  position: absolute; top: 10px; right: 10px; z-index: 3;
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,.92); border: 1px solid var(--line);
+  border-radius: 999px; padding: 4px 9px; cursor: pointer;
+  font-size: 13px; font-weight: 800; color: var(--teal-deep);
+  box-shadow: 0 2px 6px rgba(31,45,43,.12); line-height: 1;
+  transition: transform .12s ease, background .12s ease;
+}
+.like:hover { transform: scale(1.06); }
+.like:active { transform: scale(.94); }
+.like__ico { font-size: 15px; }
+.like--on { background: #ffe9ec; border-color: #ffc2cc; color: #d6336c; }
+.like__n { min-width: 8px; text-align: center; }
