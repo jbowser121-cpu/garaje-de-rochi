@@ -68,6 +68,21 @@ async function compartir() {
   window.open(`https://wa.me/?text=${encodeURIComponent(texto + " " + url)}`, "_blank", "noopener");
 }
 
+// Compartir UN producto: su enlace abre la tienda directamente en ese producto.
+async function compartirProducto(sku) {
+  const p = state.productos.find((x) => x.sku === sku);
+  if (!p) return;
+  const base = state.publicUrl || window.location.origin;
+  const url = `${base}/?p=${encodeURIComponent(sku)}`;
+  const texto = `${p.nombre} — ${money(p.precio)} en ${state.tienda?.nombre || "El Garaje de Rochi"} 💚`;
+  if (navigator.share) {
+    try { await navigator.share({ title: p.nombre, text: texto, url }); } catch {}
+    return;
+  }
+  try { await navigator.clipboard.writeText(url); } catch {}
+  window.open(`https://wa.me/?text=${encodeURIComponent(texto + " " + url)}`, "_blank", "noopener");
+}
+
 async function init() {
   const info = await fetch("/api/tienda").then((r) => r.json());
   state.tienda = info.tienda;
@@ -97,6 +112,12 @@ async function init() {
   renderOpinionesHome();
   bindEvents();
   renderCart();
+
+  // Enlace compartido de un producto: /?p=SKU abre ese producto directamente.
+  const skuCompartido = new URLSearchParams(window.location.search).get("p");
+  if (skuCompartido && state.productos.some((x) => x.sku === skuCompartido)) {
+    abrirProducto(skuCompartido);
+  }
 }
 
 // ---------- Cinta de anuncios en movimiento ----------
@@ -308,6 +329,7 @@ function renderGrid() {
               : `<button class="btn btn--primary btn--block" data-add="${p.sku}">
                    ${enCarrito ? `En carrito (${enCarrito}) · Agregar` : "Agregar al carrito"}
                  </button>`}
+            <button class="btn btn--ghost card__share" data-share="${p.sku}" aria-label="Compartir este producto" title="Compartir">🔗</button>
           </div>
         </div>
       </article>`;
@@ -321,6 +343,9 @@ function renderGrid() {
   );
   grid.querySelectorAll("[data-like]").forEach((b) =>
     b.addEventListener("click", (e) => { e.stopPropagation(); toggleLike(b.dataset.like, b); })
+  );
+  grid.querySelectorAll("[data-share]").forEach((b) =>
+    b.addEventListener("click", (e) => { e.stopPropagation(); compartirProducto(b.dataset.share); })
   );
 }
 
@@ -379,6 +404,9 @@ function abrirProducto(sku) {
     prev.outerHTML = `<button class="btn btn--primary btn--block" id="pmAdd">Agregar al carrito 🛒</button>`;
     $("#pmAdd").onclick = () => { addToCart(sku); cerrarProducto(); };
   }
+
+  const share = $("#pmShare");
+  if (share) share.onclick = () => compartirProducto(sku);
 
   renderSugerencias(sku);
 

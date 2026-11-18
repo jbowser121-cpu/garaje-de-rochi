@@ -423,3 +423,12 @@ a { color: inherit; }
 .like__ico { font-size: 15px; }
 .like--on { background: #ffe9ec; border-color: #ffc2cc; color: #d6336c; }
 .like__n { min-width: 8px; text-align: center; }
+
+/* ---------- Compartir producto (tarjeta y detalle) ---------- */
+.card__actions { display: flex; gap: 8px; align-items: stretch; }
+.card__actions .btn--block { flex: 1; }
+.card__actions .agotado-aviso { flex: 1; }
+.card__share { flex: 0 0 auto; width: 46px; padding-left: 0; padding-right: 0; font-size: 16px; }
+.pm__cta { display: flex; gap: 8px; align-items: stretch; margin: 6px 0 4px; }
+.pm__cta #pmAdd { flex: 1; }
+.pm__share { flex: 0 0 auto; white-space: nowrap; }
