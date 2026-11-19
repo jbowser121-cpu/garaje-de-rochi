@@ -433,9 +433,3 @@ a { color: inherit; }
 .pm__cta #pmAdd { flex: 1; }
 .pm__share { flex: 0 0 auto; white-space: nowrap; }
 
-/* ---------- Logo del hero ---------- */
-.hero__logo {
-  display: block; width: 230px; max-width: 66%; height: auto;
-  margin: 0 auto 12px; border-radius: 20px;
-}
-@media (max-width: 640px) { .hero__logo { width: 180px; } }
