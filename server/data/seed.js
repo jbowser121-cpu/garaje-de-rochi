@@ -407,7 +407,8 @@ export const envios = {
 
 export const tienda = {
   nombre: "El Garaje de Rochi",
-  iniciales: "GR", // Iniciales del logo circular (reemplázalas por la imagen real del logo)
+  iniciales: "GR", // Respaldo si no carga la imagen
+  logoUrl: "/logo.jpg", // Logo real (encabezado)
   eslogan: "Vitaminas y suplementos originales, con envío a todo el país",
   whatsapp: "573144503681", // WhatsApp principal (ventas)
   instagram: "@elgarajederochi_1",
